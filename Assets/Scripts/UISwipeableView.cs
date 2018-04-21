@@ -31,6 +31,17 @@ namespace SwipeableView
 
             return card;
         }
+
+        public void SetContext(TContext context)
+        {
+            this.context = context;
+
+            for (int i = 0, count = cards.Count; i < count; ++i)
+            {
+                cards[i].SetContext(context);
+            }
+        }
+
 	}
 }
 
