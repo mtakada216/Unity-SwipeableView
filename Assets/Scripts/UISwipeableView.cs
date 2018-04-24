@@ -5,7 +5,7 @@ using UnityEngine;
 namespace SwipeableView
 {
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
-	{
+    {
         [SerializeField]
         private GameObject cardPrefab;
 
@@ -13,9 +13,11 @@ namespace SwipeableView
         private Transform cardRoot;
 
 
+        private List<TData> data = new List<TData>();
         private TContext context;
+
         private readonly List<UISwipeableCard<TData, TContext>> cards
-            = new List<UISwipeableCard<TData, TContext>>();
+            = new List<UISwipeableCard<TData, TContext>>(2);
 
 
 
@@ -42,7 +44,20 @@ namespace SwipeableView
             }
         }
 
+        private void UpdateCard(int index)
+        {
+            // データが存在しなければ非表示
+            if (index < 0 || index > data.Count - 1)
+            {
+                //cards[index].SetVisible(false);
+                return;
+            }
 
+            var card = cards[index];
+            card.SetVisible(true);
+            card.DataIndex = index;
+            card.UpdateContent(data[index]);
+        }
 	}
 }
 

@@ -6,6 +6,8 @@ namespace SwipeableView
 {
     public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
     {
+        public int DataIndex { get; set; }
+
         private Transform cachedTransform;
 
         void Awake()
@@ -13,11 +15,8 @@ namespace SwipeableView
             cachedTransform = this.transform;
         }
 
-
-        private TContext context;
         public virtual void SetContext(TContext context)
         {
-            this.context = context;
         }
 
         public virtual void SetVisible(bool visible)
@@ -25,9 +24,13 @@ namespace SwipeableView
             gameObject.SetActive(visible);
         }
 
+        public virtual void UpdateContent(TData data)
+        {
+        }
+
         public virtual void Swipe(Vector2 position)
         {
-            cachedTransform.localPosition = vec;
+            cachedTransform.localPosition += new Vector3(position.x, position.y, 0);
         }
 	}
 }
