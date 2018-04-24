@@ -44,19 +44,18 @@ namespace SwipeableView
             }
         }
 
-        private void UpdateCard(int index)
+        private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
             // データが存在しなければ非表示
-            if (index < 0 || index > data.Count - 1)
+            if (dataIndex < 0 || dataIndex > data.Count - 1)
             {
-                //cards[index].SetVisible(false);
+                card.SetVisible(false);
                 return;
             }
 
-            var card = cards[index];
             card.SetVisible(true);
-            card.DataIndex = index;
-            card.UpdateContent(data[index]);
+            card.DataIndex = dataIndex;
+            card.UpdateContent(data[dataIndex]);
         }
 	}
 }
