@@ -57,6 +57,15 @@ namespace SwipeableView
             card.DataIndex = dataIndex;
             card.UpdateContent(data[dataIndex]);
         }
+
+        private void UpdateCardPosition(UISwipeableCard<TData, TContext> card, int dataIndex)
+        {
+            // 再背面に移動
+            card.transform.SetAsLastSibling();
+            card.UpdatePosition(Vector3.zero); // TODO:rotate
+            // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
+            UpdateCard(card, dataIndex + 2); 
+        }
 	}
 }
 

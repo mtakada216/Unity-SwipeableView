@@ -28,6 +28,10 @@ namespace SwipeableView
         {
         }
 
+        public virtual void UpdatePosition(Vector3 position)
+        {
+        }
+
         public virtual void Swipe(Vector2 position)
         {
             cachedTransform.localPosition += new Vector3(position.x, position.y, 0);
