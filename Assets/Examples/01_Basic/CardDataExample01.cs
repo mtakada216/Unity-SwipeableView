@@ -1,17 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
-public class NewMonoBehaviour : MonoBehaviour
+namespace SwipeableView
 {
-	// Use this for initialization
-	void Start()
-	{
-
-	}
-
-	// Update is called once per frame
-	void Update()
-	{
-			
-	}
+    public class CardDataExample01 : MonoBehaviour
+    {
+        public Color color;
+    }
 }
