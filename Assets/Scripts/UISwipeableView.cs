@@ -13,12 +13,11 @@ namespace SwipeableView
         private Transform cardRoot;
 
 
-        private List<TData> data = new List<TData>();
-        private TContext context;
+        protected List<TData> data = new List<TData>();
+        protected TContext context;
 
         private readonly List<UISwipeableCard<TData, TContext>> cards
             = new List<UISwipeableCard<TData, TContext>>(2);
-
 
 
         private UISwipeableCard<TData, TContext> CreateCard()
@@ -30,6 +29,8 @@ namespace SwipeableView
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);
             card.SetVisible(false);
+            card.ActionRightSwipe += UpdateCardPosition;
+            card.ActionLeftSwipe += UpdateCardPosition;
 
             return card;
         }

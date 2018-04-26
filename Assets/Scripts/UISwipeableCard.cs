@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace SwipeableView
     public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
     {
         public int DataIndex { get; set; }
+        public Action<UISwipeableCard<TData, TContext>, int> ActionRightSwipe { get; set; }
+        public Action<UISwipeableCard<TData, TContext>, int> ActionLeftSwipe { get; set; }
+
 
         private Transform cachedTransform;
 
