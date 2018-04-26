@@ -20,6 +20,21 @@ namespace SwipeableView
             = new List<UISwipeableCard<TData, TContext>>(2);
 
 
+        public void Init()
+		{
+            CreateCard();
+		}
+
+		public void SetContext(TContext context)
+        {
+            this.context = context;
+
+            for (int i = 0, count = cards.Count; i < count; ++i)
+            {
+                cards[i].SetContext(context);
+            }
+        }
+
         private UISwipeableCard<TData, TContext> CreateCard()
         {
             var cardObject = Object.Instantiate(cardPrefab, cardRoot);
@@ -33,16 +48,6 @@ namespace SwipeableView
             card.ActionLeftSwipe += UpdateCardPosition;
 
             return card;
-        }
-
-        public void SetContext(TContext context)
-        {
-            this.context = context;
-
-            for (int i = 0, count = cards.Count; i < count; ++i)
-            {
-                cards[i].SetContext(context);
-            }
         }
 
         private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
@@ -68,5 +73,11 @@ namespace SwipeableView
             UpdateCard(card, dataIndex + 2); 
         }
 	}
+
+    public class SwipeableViewNullContext {}
+
+    public class UISwipeableView<TData> : UISwipeableView<TData, SwipeableViewNullContext>
+    {
+    }
 }
 

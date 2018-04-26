@@ -41,5 +41,9 @@ namespace SwipeableView
             cachedTransform.localPosition += new Vector3(position.x, position.y, 0);
         }
 	}
+
+    public class UISwipeableCard<TData> : UISwipeableCard<TData, SwipeableViewNullContext>
+    {
+    }
 }
 
