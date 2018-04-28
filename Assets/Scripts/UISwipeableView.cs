@@ -17,12 +17,21 @@ namespace SwipeableView
         protected TContext context;
 
         private readonly List<UISwipeableCard<TData, TContext>> cards
-            = new List<UISwipeableCard<TData, TContext>>(2);
+            = new List<UISwipeableCard<TData, TContext>>(MAX_CREATE_COUNT);
 
+        private const int MAX_CREATE_COUNT = 2;
 
         public void Init()
 		{
-            CreateCard();
+            int createCount = data.Count > MAX_CREATE_COUNT 
+                    ? MAX_CREATE_COUNT : data.Count;
+            
+            for (int i = 0; i < createCount; ++i)
+            {
+                var card = CreateCard();
+                UpdateCardPosition(card, i - 2); // TODO: 設計見直す
+                cards.Add(card);
+            }
 		}
 
 		public void SetContext(TContext context)
