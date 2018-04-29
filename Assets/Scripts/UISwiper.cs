@@ -16,6 +16,7 @@ namespace SwipeableView
             base.Awake();
 
             viewport = GetComponent<RectTransform>();
+            card = GetComponent<ISwipeable>();
 		}
 
 

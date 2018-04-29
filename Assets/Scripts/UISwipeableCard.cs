@@ -12,11 +12,11 @@ namespace SwipeableView
         public Action<UISwipeableCard<TData, TContext>, int> ActionLeftSwipe { get; set; }
 
 
-        private Transform cachedTransform;
+        private RectTransform cachedRect;
 
-        void Awake()
+        void Start()
         {
-            cachedTransform = this.transform;
+            cachedRect = transform as RectTransform;
         }
 
         public virtual void SetContext(TContext context)
@@ -38,7 +38,7 @@ namespace SwipeableView
 
         public virtual void Swipe(Vector2 position)
         {
-            cachedTransform.localPosition += new Vector3(position.x, position.y, 0);
+            cachedRect.localPosition += new Vector3(position.x, position.y, 0);
         }
 	}
 
