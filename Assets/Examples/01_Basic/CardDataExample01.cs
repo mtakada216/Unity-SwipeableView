@@ -5,6 +5,6 @@ namespace SwipeableView
 {
     public class CardDataExample01 : MonoBehaviour
     {
-        public Color color;
+        public string message;
     }
 }

@@ -14,9 +14,9 @@ namespace SwipeableView
         {
             var data = Enumerable.Range(0, 10)
                                  .Select(i => new CardDataExample01
-                                    {
-                                        color = Color.Lerp(Color.blue, Color.green, i / 10) 
-                                    })
+                                 {
+                                     message = "Card " + i
+                                 })
                                  .ToList();
 
             swipeableView.UpdateData(data);

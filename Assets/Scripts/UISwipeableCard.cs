@@ -36,9 +36,31 @@ namespace SwipeableView
         {
         }
 
-        public virtual void Swipe(Vector2 position)
+        public void Swipe(Vector2 position)
         {
             cachedRect.localPosition += new Vector3(position.x, position.y, 0);
+        }
+
+        public void EndSwipe()
+        {
+            if (IsSwipedRight(cachedRect.localPosition))
+            {
+                ActionRightSwipe.Invoke(this, DataIndex);
+            }
+            else if (IsSwipedLeft(cachedRect.localPosition))
+            {
+                ActionLeftSwipe.Invoke(this, DataIndex);
+            }
+        }
+
+        private bool IsSwipedRight(Vector3 position)
+        {
+            return position.x > cachedRect.sizeDelta.x / 2;
+        }
+
+        private bool IsSwipedLeft(Vector3 position)
+        {
+            return position.x < -(cachedRect.sizeDelta.x / 2);
         }
 	}
 

@@ -62,7 +62,7 @@ namespace SwipeableView
                 return;
             }
 
-            dragEndPosition = GetLocalPosition(eventData);
+            DecidePosition(GetLocalPosition(eventData));
         }
 
         private Vector2 GetLocalPosition(PointerEventData eventData)
@@ -91,6 +91,16 @@ namespace SwipeableView
                 card.Swipe(position);
             }
 		}
+
+        private void DecidePosition(Vector2 position)
+        {
+            dragEndPosition = position;
+
+            if (card != null)
+            {
+                card.EndSwipe();
+            }
+        }
 	}
 }
 
