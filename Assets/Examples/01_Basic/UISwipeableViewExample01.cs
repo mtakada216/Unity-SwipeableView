@@ -8,8 +8,7 @@ namespace SwipeableView
     {
         public void UpdateData(List<CardDataExample01> data)
         {
-            base.data = data;
-            Init();
+            base.Initialize(data);
         }
     }
 }
