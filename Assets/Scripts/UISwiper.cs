@@ -81,7 +81,12 @@ namespace SwipeableView
             return (localCursor - pointerStartLocalPosition) * swipeSensitivity;
         }
 
-        public ISwipeable card { get; set; }
+        private ISwipeable card;
+        public void SetCard(ISwipeable card)
+        {
+            this.card = card;
+        }
+
         private void UpdatePosition(Vector2 position)
 		{
             dragCurrentPosition = position;

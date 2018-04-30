@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace SwipeableView
 {
+    [RequireComponent(typeof(UISwiper))]
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
     {
         [SerializeField]
@@ -20,8 +21,8 @@ namespace SwipeableView
 
         private const int MAX_CREATE_COUNT = 2;
 
-        
-        public void Initialize(List<TData> data)
+
+		public void Initialize(List<TData> data)
 		{
             this.data = data;
 
@@ -51,6 +52,11 @@ namespace SwipeableView
             var cardObject = Object.Instantiate(cardPrefab, cardRoot);
             cardPrefab.SetActive(true);
             cardObject.transform.SetAsLastSibling();
+            var swiper = cardObject.GetComponent<UISwiper>();
+            if (swiper == null)
+            {
+                cardObject.AddComponent<UISwiper>();
+            }
 
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);
@@ -59,6 +65,17 @@ namespace SwipeableView
             card.ActionLeftSwipe += UpdateCardPosition;
 
             return card;
+        }
+
+        protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card, int dataIndex)
+        {
+            // 再背面に移動
+            card.transform.SetAsFirstSibling();
+            card.UpdatePosition(Vector3.zero); // TODO:rotate
+            // 3枚目以降のカードだった場合、
+            // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
+            int index = cards.Count < 2 ? dataIndex : dataIndex + 2;
+            UpdateCard(card, index);
         }
 
         private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
@@ -73,17 +90,6 @@ namespace SwipeableView
             card.SetVisible(true);
             card.DataIndex = dataIndex;
             card.UpdateContent(data[dataIndex]);
-        }
-
-        protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card, int dataIndex)
-        {
-            // 再背面に移動
-            card.transform.SetAsFirstSibling();
-            card.UpdatePosition(Vector3.zero); // TODO:rotate
-            // 3枚目以降のカードだった場合、
-            // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
-            int index = cards.Count < 2 ? dataIndex : dataIndex + 2;
-            UpdateCard(card, index);
         }
 	}
 
