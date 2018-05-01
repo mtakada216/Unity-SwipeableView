@@ -15,7 +15,7 @@ namespace SwipeableView
             var data = Enumerable.Range(0, 10)
                                  .Select(i => new CardDataExample01
                                  {
-                                     message = "Card " + i
+                                    color = new Color(Random.value, Random.value, Random.value, 1.0f)
                                  })
                                  .ToList();
 

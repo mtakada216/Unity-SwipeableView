@@ -8,7 +8,7 @@ namespace SwipeableView
     public class UISwipeableCardExample01 : UISwipeableCard<CardDataExample01>
     {
         [SerializeField]
-        private Text message;
+        private Image image;
 
         private RectTransform rect;
 
@@ -19,7 +19,7 @@ namespace SwipeableView
 
 		public override void UpdateContent(CardDataExample01 data)
 		{
-            message.text = data.message;
+            image.color = data.color;
 		}
 
 		public override void UpdatePosition(Vector3 position)
