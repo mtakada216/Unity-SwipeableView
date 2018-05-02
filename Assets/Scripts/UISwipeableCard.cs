@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SwipeableView
@@ -10,7 +8,6 @@ namespace SwipeableView
         public int DataIndex { get; set; }
         public Action<UISwipeableCard<TData, TContext>, int> ActionRightSwipe { get; set; }
         public Action<UISwipeableCard<TData, TContext>, int> ActionLeftSwipe { get; set; }
-
 
         private RectTransform cachedRect;
 
