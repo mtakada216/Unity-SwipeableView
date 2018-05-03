@@ -3,18 +3,18 @@ using UnityEngine.EventSystems;
 
 namespace SwipeableView
 {
-    public class UISwiper : UIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class UISwiper : UIBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [SerializeField]
         private float swipeSensitivity = 1f;
 
-        private RectTransform viewport;
+        private RectTransform rect;
 
 		protected override void Awake()
 		{
             base.Awake();
 
-            viewport = GetComponent<RectTransform>();
+            rect = transform as RectTransform;
             card = GetComponent<ISwipeable>();
 		}
 
@@ -31,7 +31,7 @@ namespace SwipeableView
 
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewport,
+                rect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out pointerStartLocalPosition
@@ -68,7 +68,7 @@ namespace SwipeableView
         {
             Vector2 localCursor = Vector2.zero;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewport,
+                rect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out localCursor
@@ -87,7 +87,7 @@ namespace SwipeableView
         }
 
         private void UpdatePosition(Vector2 position)
-		{
+        {
             dragCurrentPosition = position;
 
             if (card != null)
@@ -104,6 +104,40 @@ namespace SwipeableView
             {
                 card.EndSwipe();
             }
+        }
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            Vector2 localCursor = Vector2.zero;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rect,
+                eventData.position,
+                eventData.pressEventCamera,
+                out localCursor
+            ))
+            {
+                return;
+            }
+
+            Debug.Log(localCursor);
+            var size = rect.rect.size;
+            var pivot = (localCursor + size / 2) / size;
+            SetPivot(rect, pivot);
+        }
+
+        private void SetPivot(RectTransform rect, Vector2 pivot)
+        {
+            Vector3 size = rect.sizeDelta;
+            Vector2 scale = rect.localScale;
+            Vector2 deltaPivot = rect.pivot - pivot;
+            Vector3 deltaPositon =
+                rect.rotation * 
+                    new Vector3(
+                        deltaPivot.x * size.x * scale.x,
+                        deltaPivot.y * size.y * scale.y);
+
+            rect.pivot = pivot;
+            rect.localPosition -= deltaPositon;
         }
 	}
 }
