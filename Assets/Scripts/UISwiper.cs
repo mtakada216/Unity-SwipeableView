@@ -8,18 +8,18 @@ namespace SwipeableView
         [SerializeField]
         private float swipeSensitivity = 1f;
 
-        private RectTransform rect;
+        private RectTransform viewRect;
 
-		protected override void Awake()
-		{
+        protected override void Awake()
+        {
             base.Awake();
 
-            rect = transform as RectTransform;
+            viewRect = transform as RectTransform;
             card = GetComponent<ISwipeable>();
-		}
+        }
 
 
-		private Vector2 pointerStartLocalPosition;
+        private Vector2 pointerStartLocalPosition;
         private Vector2 dragStartPosition;
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
@@ -31,7 +31,7 @@ namespace SwipeableView
 
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                rect,
+                viewRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out pointerStartLocalPosition
@@ -68,7 +68,7 @@ namespace SwipeableView
         {
             Vector2 localCursor = Vector2.zero;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                rect,
+                viewRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out localCursor
@@ -94,7 +94,7 @@ namespace SwipeableView
             {
                 card.Swipe(position);
             }
-		}
+        }
 
         private void DecidePosition(Vector2 position)
         {
@@ -110,7 +110,7 @@ namespace SwipeableView
         {
             Vector2 localCursor = Vector2.zero;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                rect,
+                viewRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out localCursor
@@ -119,35 +119,35 @@ namespace SwipeableView
                 return;
             }
 
-            Debug.Log(localCursor);
-            var size = rect.rect.size;
-            var pivot = (localCursor + GetDeltaPosition(rect) + size / 2) / size;
-            SetPivot(rect, pivot);
+            var size = viewRect.rect.size;
+            localCursor = GetCorrectedLocalCursor(viewRect, localCursor);
+            var pivot = (localCursor + size / 2) / size;
+            ChangeViewRectPivot(viewRect, pivot);
         }
 
-        private Vector2 GetDeltaPosition(RectTransform rect)
+        private static readonly Vector2 PIVOT_DEFAULT = new Vector2(0.5f, 0.5f);
+        private Vector2 GetCorrectedLocalCursor(RectTransform rect, Vector2 localCursor)
         {
-            Vector3 size = rect.sizeDelta;
-            Vector2 deltaPivot = rect.pivot - new Vector2(0.5f, 0.5f);
-            Vector3 deltaPosition =
-                rect.rotation *
-                    new Vector3(
-                        deltaPivot.x * size.x,
-                        deltaPivot.y * size.y);
-            
-            return deltaPosition;
+            Vector2 deltaPivot = rect.pivot - PIVOT_DEFAULT;
+            Vector2 deltaPosition = GetDeltaPosition(rect, deltaPivot);
+            return localCursor + deltaPosition;
         }
 
-        private void SetPivot(RectTransform rect, Vector2 pivot)
+        private Vector2 GetDeltaPosition(RectTransform rect, Vector2 deltaPivot)
         {
-            Vector3 size = rect.sizeDelta;
-            Vector2 scale = rect.localScale;
+            Vector2 size = rect.sizeDelta;
+            Vector3 scale = rect.localScale;
+            Quaternion rotation = rect.rotation;
+            return rotation * new Vector3(
+                size.x * scale.x * deltaPivot.x,
+                size.y * scale.y * deltaPivot.y
+            );
+        }
+
+        private void ChangeViewRectPivot(RectTransform rect, Vector2 pivot)
+        {
             Vector2 deltaPivot = rect.pivot - pivot;
-            Vector3 deltaPositon =
-                rect.rotation * 
-                    new Vector3(
-                        deltaPivot.x * size.x * scale.x,
-                        deltaPivot.y * size.y * scale.y);
+            Vector3 deltaPositon = GetDeltaPosition(rect, deltaPivot);
 
             rect.pivot = pivot;
             rect.localPosition -= deltaPositon;
