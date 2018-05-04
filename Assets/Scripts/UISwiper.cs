@@ -121,8 +121,21 @@ namespace SwipeableView
 
             Debug.Log(localCursor);
             var size = rect.rect.size;
-            var pivot = (localCursor + size / 2) / size;
+            var pivot = (localCursor + GetDeltaPosition(rect) + size / 2) / size;
             SetPivot(rect, pivot);
+        }
+
+        private Vector2 GetDeltaPosition(RectTransform rect)
+        {
+            Vector3 size = rect.sizeDelta;
+            Vector2 deltaPivot = rect.pivot - new Vector2(0.5f, 0.5f);
+            Vector3 deltaPosition =
+                rect.rotation *
+                    new Vector3(
+                        deltaPivot.x * size.x,
+                        deltaPivot.y * size.y);
+            
+            return deltaPosition;
         }
 
         private void SetPivot(RectTransform rect, Vector2 pivot)
