@@ -33,6 +33,7 @@ namespace SwipeableView
         {
         }
 
+        #region Swipe
         public void Swipe(Vector2 position)
         {
             cachedRect.localPosition += new Vector3(position.x, position.y, 0);
@@ -59,7 +60,8 @@ namespace SwipeableView
         {
             return position.x < -(cachedRect.sizeDelta.x / 2);
         }
-	}
+        #endregion
+    }
 
     public class UISwipeableCard<TData> : UISwipeableCard<TData, SwipeableViewNullContext>
     {
