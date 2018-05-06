@@ -21,6 +21,7 @@ namespace SwipeableView
 
         private IChangeablePivot pivotChanger;
         private Vector2 pointerStartLocalPosition;
+        private Vector2 startDragPosition;
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
@@ -29,16 +30,24 @@ namespace SwipeableView
                 return;
             }
 
-            pointerStartLocalPosition = GetLocalPoint(eventData);
+            pointerStartLocalPosition = Vector2.zero;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                viewRect,
+                eventData.position,
+                eventData.pressEventCamera,
+                out pointerStartLocalPosition
+            );
 
             if (pivotChanger != null)
             {
                 pivotChanger.Change(pointerStartLocalPosition);
             }
+
+            startDragPosition = Vector2.zero;
         }
 
+        private ISwipeable card;
         private Vector2 dragCurrentPosition;
-
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -46,7 +55,30 @@ namespace SwipeableView
                 return;
             }
 
-            UpdatePosition(GetLocalPoint(eventData));
+            Vector2 localCursor;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                viewRect,
+                eventData.position,
+                eventData.pressEventCamera,
+                out localCursor
+            ))
+            {
+                return;
+            }
+
+            // pivot位置のの変更によってpositionが変化している可能性があるため、
+            // このタイミングでドラッグ開始位置を取得する
+            if (startDragPosition == Vector2.zero)
+            {
+                startDragPosition = localCursor;
+            }
+
+            var pointerDelta = localCursor - startDragPosition;
+
+            if (card != null)
+            {
+                card.Swipe(pointerDelta);
+            }
         }
 
         private Vector2 dragEndPosition;
@@ -57,44 +89,28 @@ namespace SwipeableView
                 return;
             }
 
-            DecidePosition(GetLocalPoint(eventData));
-        }
-
-        private Vector2 GetLocalPoint(PointerEventData eventData)
-        {
-            Vector2 localCursor = Vector2.zero;
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewRect,
-                eventData.position,
-                eventData.pressEventCamera,
-                out localCursor
-            ))
-            {
-                return localCursor;
-            }
-
-            return (localCursor - pointerStartLocalPosition) * swipeSensitivity;
-        }
-
-        private ISwipeable card;
-        private void UpdatePosition(Vector2 position)
-        {
-            dragCurrentPosition = position;
-
-            if (card != null)
-            {
-                card.Swipe(position);
-            }
-        }
-
-        private void DecidePosition(Vector2 position)
-        {
-            dragEndPosition = position;
+            dragEndPosition = GetLocalPoint(eventData);
 
             if (card != null)
             {
                 card.EndSwipe();
             }
+        }
+
+        private Vector2 GetLocalPoint(PointerEventData eventData)
+        {
+            //Vector2 localCursor = Vector2.zero;
+            //if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            //    viewRect,
+            //    eventData.position,
+            //    eventData.pressEventCamera,
+            //    out localCursor
+            //))
+            //{
+            //    return localCursor;
+            //}
+
+            return (eventData.position - pointerStartLocalPosition) * swipeSensitivity;
         }
 	}
 }

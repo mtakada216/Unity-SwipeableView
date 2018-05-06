@@ -3,5 +3,5 @@ using System.Collections;
 
 public interface IChangeablePivot
 {
-    void Change(Vector2 position);
+    Vector2 Change(Vector2 position);
 }

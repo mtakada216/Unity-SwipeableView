@@ -22,7 +22,7 @@ namespace SwipeableView
             rectRotation = viewRect.rotation;
 		}
 
-        public void Change(Vector2 position)
+        public Vector2 Change(Vector2 position)
         {
             Vector2 correctedPoint = GetCorrectedPoint(position);
             Vector2 pivot = (correctedPoint + rectSize / 2) / rectSize;
@@ -31,6 +31,7 @@ namespace SwipeableView
             Vector3 deltaPosition = GetDeltaPosition(deltaPivot);
             viewRect.pivot = pivot;
             viewRect.localPosition -= deltaPosition;
+            return position + new Vector2(viewRect.localPosition.x, viewRect.localPosition.y);
         }
 
         private Vector2 GetCorrectedPoint(Vector2 current)
