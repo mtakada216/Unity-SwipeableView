@@ -75,13 +75,14 @@ namespace SwipeableView
 
             var pointerDelta = localCursor - startDragPosition;
 
+            Debug.Log(Vector2.Dot(Vector3.up, pointerDelta) * Mathf.Rad2Deg);
+
             if (card != null)
             {
                 card.Swipe(pointerDelta);
             }
         }
 
-        private Vector2 dragEndPosition;
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -89,28 +90,10 @@ namespace SwipeableView
                 return;
             }
 
-            dragEndPosition = GetLocalPoint(eventData);
-
             if (card != null)
             {
                 card.EndSwipe();
             }
-        }
-
-        private Vector2 GetLocalPoint(PointerEventData eventData)
-        {
-            //Vector2 localCursor = Vector2.zero;
-            //if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            //    viewRect,
-            //    eventData.position,
-            //    eventData.pressEventCamera,
-            //    out localCursor
-            //))
-            //{
-            //    return localCursor;
-            //}
-
-            return (eventData.position - pointerStartLocalPosition) * swipeSensitivity;
         }
 	}
 }

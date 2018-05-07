@@ -2,8 +2,8 @@ namespace SwipeableView
 {
     public interface ISwipeable
     {
-        void Swipe(UnityEngine.Vector2 position);
-
+        void Move(UnityEngine.Vector2 position);
+        void Rotate(UnityEngine.Vector2 angle);
         void EndSwipe();
     }
 }

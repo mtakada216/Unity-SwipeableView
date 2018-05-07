@@ -34,9 +34,14 @@ namespace SwipeableView
         }
 
         #region Swipe
-        public void Swipe(Vector2 position)
+        public void Move(Vector2 position)
         {
             cachedRect.localPosition += new Vector3(position.x, position.y, 0);
+        }
+
+        public void Rotate(Vector2 angle)
+        {
+            
         }
 
         public void EndSwipe()
