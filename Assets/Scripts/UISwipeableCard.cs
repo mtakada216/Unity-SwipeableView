@@ -39,9 +39,9 @@ namespace SwipeableView
             cachedRect.localPosition += new Vector3(position.x, position.y, 0);
         }
 
-        public void Rotate(Vector2 angle)
+        public void Rotate(float degree)
         {
-            
+            cachedRect.localEulerAngles = new Vector3(0, 0, degree);
         }
 
         public void EndSwipe()
