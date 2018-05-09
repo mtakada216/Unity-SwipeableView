@@ -21,11 +21,6 @@ namespace SwipeableView
 		{
             image.color = data.color;
 		}
-
-		public override void UpdatePosition(Vector3 position)
-		{
-            rect.localPosition = position;
-		}
 	}
 }
 

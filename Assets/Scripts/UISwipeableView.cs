@@ -70,7 +70,9 @@ namespace SwipeableView
         {
             // 再背面に移動
             card.transform.SetAsFirstSibling();
-            card.UpdatePosition(Vector3.zero); // TODO:rotate
+            card.UpdatePosition(Vector3.zero);
+            card.UpdateRotation(Vector3.zero);
+            card.UpdatePivot(new Vector2(0.5f, 0.5f));
             // 3枚目以降のカードだった場合、
             // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
             int index = cards.Count < 2 ? dataIndex : dataIndex + 2;

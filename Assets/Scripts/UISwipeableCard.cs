@@ -11,7 +11,7 @@ namespace SwipeableView
 
         private RectTransform cachedRect;
 
-        void Start()
+        void OnEnable()
         {
             cachedRect = transform as RectTransform;
         }
@@ -31,6 +31,17 @@ namespace SwipeableView
 
         public virtual void UpdatePosition(Vector3 position)
         {
+            cachedRect.localPosition = position;
+        }
+
+        public virtual void UpdateRotation(Vector3 rotation)
+        {
+            cachedRect.localEulerAngles = rotation;
+        }
+
+        public virtual void UpdatePivot(Vector2 pivot)
+        {
+            cachedRect.pivot = pivot;
         }
 
         #region Swipe
