@@ -52,7 +52,7 @@ namespace SwipeableView
 
         public void Rotate(float degree)
         {
-            cachedRect.localEulerAngles = new Vector3(0, 0, degree);
+            cachedRect.localEulerAngles += new Vector3(0, 0, degree);
         }
 
         public void EndSwipe()

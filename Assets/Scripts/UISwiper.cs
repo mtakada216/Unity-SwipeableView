@@ -75,11 +75,10 @@ namespace SwipeableView
 
             var pointerDelta = localCursor - startDragPosition;
 
-            Debug.Log(Vector2.Dot(Vector3.up, pointerDelta) * Mathf.Rad2Deg);
-
             if (card != null)
             {
                 card.Move(pointerDelta);
+                // card.Rotate(Vector2.Dot(Vector3.up, pointerDelta) * Mathf.Rad2Deg);
             }
         }
 
