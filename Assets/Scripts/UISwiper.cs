@@ -78,7 +78,6 @@ namespace SwipeableView
             if (card != null)
             {
                 card.Move(pointerDelta);
-                // card.Rotate(Vector2.Dot(Vector3.up, pointerDelta) * Mathf.Rad2Deg);
             }
         }
 
@@ -93,6 +92,14 @@ namespace SwipeableView
             {
                 card.EndSwipe();
             }
+        }
+
+        private float GetAim(Vector3 p1, Vector3 p2)
+        {
+            float dx = p2.x - p1.x;
+            float dy = p2.y - p1.y;
+            float rad = Mathf.Atan2(dy, dx);
+            return rad * Mathf.Rad2Deg;
         }
 	}
 }
