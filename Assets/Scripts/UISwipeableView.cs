@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace SwipeableView
 {
-    [RequireComponent(typeof(UISwiper))]
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
     {
         [SerializeField]
@@ -11,6 +10,9 @@ namespace SwipeableView
 
         [SerializeField]
         private Transform cardRoot;
+
+		[SerializeField]
+		private UISwiper swiper;
 
         private List<TData> data = new List<TData>();
         private TContext context;
@@ -51,11 +53,9 @@ namespace SwipeableView
             var cardObject = Object.Instantiate(cardPrefab, cardRoot);
             cardPrefab.SetActive(true);
             cardObject.transform.SetAsLastSibling();
-            var swiper = cardObject.GetComponent<UISwiper>();
-            if (swiper == null)
-            {
-                cardObject.AddComponent<UISwiper>();
-            }
+
+			var swipeTarget = transform.childCount == 1 ? cardObject : transform.GetChild(0).gameObject;
+			swiper.SetCard(swipeTarget);
 
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);

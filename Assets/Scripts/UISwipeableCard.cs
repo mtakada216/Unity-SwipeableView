@@ -36,7 +36,7 @@ namespace SwipeableView
 
         public virtual void UpdateRotation(Vector3 rotation)
         {
-            cachedRect.localEulerAngles = rotation;
+			cachedRect.localEulerAngles = rotation;
         }
 
         public virtual void UpdatePivot(Vector2 pivot)
@@ -47,12 +47,12 @@ namespace SwipeableView
         #region Swipe
         public void Move(Vector2 position)
         {
-            cachedRect.localPosition += new Vector3(position.x, position.y, 0);
+			UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
         }
 
         public void Rotate(float degree)
         {
-            cachedRect.localEulerAngles += new Vector3(0, 0, degree);
+			UpdateRotation(new Vector3(0f, 0f, degree));
         }
 
         public void EndSwipe()
