@@ -67,7 +67,7 @@ namespace SwipeableView
 
             if (card != null)
             {
-                card.Move(pointerDelta);
+				card.Swipe(pointerDelta);
             }
         }
 

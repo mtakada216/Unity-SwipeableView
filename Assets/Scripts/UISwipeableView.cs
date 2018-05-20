@@ -33,7 +33,8 @@ namespace SwipeableView
             for (int i = 0; i < createCount; ++i)
             {
                 var card = CreateCard();
-                UpdateCardPosition(card, i);
+				card.DataIndex = i;
+                UpdateCardPosition(card);
                 cards.Add(card);
             }
 		}
@@ -54,28 +55,27 @@ namespace SwipeableView
             cardPrefab.SetActive(true);
             cardObject.transform.SetAsLastSibling();
 
-			var swipeTarget = transform.childCount == 1 ? cardObject : transform.GetChild(0).gameObject;
-			swiper.SetCard(swipeTarget);
-
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);
             card.SetVisible(false);
-            card.ActionRightSwipe += UpdateCardPosition;
-            card.ActionLeftSwipe += UpdateCardPosition;
+            card.ActionRightSwiped += UpdateCardPosition;
+            card.ActionLeftSwiped += UpdateCardPosition;
 
             return card;
         }
 
-        protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card, int dataIndex)
+        protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
         {
             // 再背面に移動
             card.transform.SetAsFirstSibling();
             card.UpdatePosition(Vector3.zero);
             card.UpdateRotation(Vector3.zero);
-            card.UpdatePivot(new Vector2(0.5f, 0.5f));
+
+			var swipeTarget = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
+			swiper.SetCard(swipeTarget);
             // 3枚目以降のカードだった場合、
             // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
-            int index = cards.Count < 2 ? dataIndex : dataIndex + 2;
+			int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
             UpdateCard(card, index);
         }
 
