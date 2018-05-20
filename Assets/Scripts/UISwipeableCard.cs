@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace SwipeableView
@@ -73,42 +74,73 @@ namespace SwipeableView
         {
             if (IsSwipedRight(cachedRect.localPosition))
             {
-				if (ActionRightSwiped != null)
+				MoveOutViewRight(cachedRect.localPosition, () =>
 				{
-					ActionRightSwiped.Invoke(this);
-				}
+					if (ActionRightSwiped != null)
+					{
+						ActionRightSwiped.Invoke(this);
+					}
+				});
             }
             else if (IsSwipedLeft(cachedRect.localPosition))
             {
-				if (ActionLeftSwiped != null)
+				MoveOutViewLeft(cachedRect.localPosition, () =>
 				{
-					ActionLeftSwiped.Invoke(this);
-				}
+					if (ActionLeftSwiped != null)
+					{
+						ActionLeftSwiped.Invoke(this);
+					}
+				});
             }
         }
 
-		/// <summary>
-		/// 右側にスワイプされた
-		/// </summary>
         private bool IsSwipedRight(Vector3 position)
         {
 			return position.x > GetRequiredDistance(position.x);
         }
 
-		/// <summary>
-		/// 左側にスワイプされた
-		/// </summary>
         private bool IsSwipedLeft(Vector3 position)
         {
 			return position.x < GetRequiredDistance(position.y);
         }
 
-		/// <summary>
-		/// スワイプに必要な距離
-		/// </summary>
 		private float GetRequiredDistance(float positionX)
 		{
 			return positionX > 0 ? cachedRect.rect.size.x / 2 : -(cachedRect.rect.size.x / 2);
+		}
+
+		private const float DURATION = 0.25f;
+		private void MoveOutViewRight(Vector3 start, Action onComplete)
+		{
+			Vector3 end = new Vector3(cachedRect.rect.size.x * 1.5f, start.y, start.z);
+			StartCoroutine(MoveOutViewCoroutine(start, end, onComplete));
+		}
+
+		private void MoveOutViewLeft(Vector3 start, Action onComplete)
+		{
+			Vector3 end = new Vector3(-(cachedRect.rect.size.x * 1.5f), start.y, start.z);
+			StartCoroutine(MoveOutViewCoroutine(start, end, onComplete));
+		}
+
+		private IEnumerator MoveOutViewCoroutine(Vector3 start, Vector3 end, Action onComplete)
+		{
+			float endTime = Time.time + DURATION;
+
+			while(true)
+			{
+				float diff = endTime - Time.time;
+				if (diff <= 0)
+				{
+					break;
+				}
+
+				float rate = 1 - Mathf.Clamp01(diff / DURATION);
+				cachedRect.localPosition = Vector3.Lerp(start, end, rate);
+				yield return null;
+			}
+
+			cachedRect.localPosition = end;
+			onComplete.Invoke();
 		}
         #endregion
     }
