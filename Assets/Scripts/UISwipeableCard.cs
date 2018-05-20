@@ -70,10 +70,10 @@ namespace SwipeableView
 			}
 		}
 
-        public void EndSwipe()
-        {
-            if (IsSwipedRight(cachedRect.localPosition))
-            {
+		public void EndSwipe()
+		{
+			if (IsSwipedRight(cachedRect.localPosition))
+			{
 				MoveOutViewRight(cachedRect.localPosition, () =>
 				{
 					if (ActionRightSwiped != null)
@@ -81,9 +81,9 @@ namespace SwipeableView
 						ActionRightSwiped.Invoke(this);
 					}
 				});
-            }
-            else if (IsSwipedLeft(cachedRect.localPosition))
-            {
+			}
+			else if (IsSwipedLeft(cachedRect.localPosition))
+			{
 				MoveOutViewLeft(cachedRect.localPosition, () =>
 				{
 					if (ActionLeftSwiped != null)
@@ -91,17 +91,22 @@ namespace SwipeableView
 						ActionLeftSwiped.Invoke(this);
 					}
 				});
-            }
-        }
+			}
+			else
+			{
+				StartCoroutine(MoveCoroutine(cachedRect.localPosition, Vector3.zero));
+				StartCoroutine(RotateCoroutine(cachedRect.localEulerAngles, Vector3.zero));
+			}
+		}
 
         private bool IsSwipedRight(Vector3 position)
         {
-			return position.x > GetRequiredDistance(position.x);
+			return position.x > 0 && position.x > GetRequiredDistance(position.x);
         }
 
         private bool IsSwipedLeft(Vector3 position)
         {
-			return position.x < GetRequiredDistance(position.y);
+			return position.x < 0 && position.x < GetRequiredDistance(position.x);
         }
 
 		private float GetRequiredDistance(float positionX)
@@ -110,19 +115,19 @@ namespace SwipeableView
 		}
 
 		private const float DURATION = 0.25f;
-		private void MoveOutViewRight(Vector3 start, Action onComplete)
+		private void MoveOutViewRight(Vector3 from, Action onComplete)
 		{
-			Vector3 end = new Vector3(cachedRect.rect.size.x * 1.5f, start.y, start.z);
-			StartCoroutine(MoveOutViewCoroutine(start, end, onComplete));
+			Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
+			StartCoroutine(MoveCoroutine(from, to, onComplete));
 		}
 
-		private void MoveOutViewLeft(Vector3 start, Action onComplete)
+		private void MoveOutViewLeft(Vector3 from, Action onComplete)
 		{
-			Vector3 end = new Vector3(-(cachedRect.rect.size.x * 1.5f), start.y, start.z);
-			StartCoroutine(MoveOutViewCoroutine(start, end, onComplete));
+			Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
+			StartCoroutine(MoveCoroutine(from, to, onComplete));
 		}
 
-		private IEnumerator MoveOutViewCoroutine(Vector3 start, Vector3 end, Action onComplete)
+		private IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
 		{
 			float endTime = Time.time + DURATION;
 
@@ -135,13 +140,42 @@ namespace SwipeableView
 				}
 
 				float rate = 1 - Mathf.Clamp01(diff / DURATION);
-				cachedRect.localPosition = Vector3.Lerp(start, end, rate);
+				cachedRect.localPosition = Vector3.Lerp(from, to, rate);
 				yield return null;
 			}
 
-			cachedRect.localPosition = end;
-			onComplete.Invoke();
+			cachedRect.localPosition = to;
+			if (onComplete != null)
+			{
+				onComplete.Invoke();
+			}
 		}
+
+		private IEnumerator RotateCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
+		{
+			float endTime = Time.time + DURATION;
+
+			while(true)
+			{
+				float diff = endTime - Time.time;
+				if (diff <= 0)
+				{
+					break;
+				}
+
+				float rate = 1 - Mathf.Clamp01(diff / DURATION);
+				float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, rate);
+				cachedRect.localEulerAngles = new Vector3(from.x, from.y, angleZ);
+				yield return null;
+			}
+
+			cachedRect.localEulerAngles = to;
+			if (onComplete != null)
+			{
+				onComplete.Invoke();
+			}
+		}
+
         #endregion
     }
 
