@@ -74,8 +74,8 @@ namespace SwipeableView
 			var swipeTarget = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
 			swiper.SetCard(swipeTarget);
             // 3枚目以降のカードだった場合、
-            // 次のカードはすでに表示されているため、そのさらに次のカードを表示する
-			int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
+            // 次のデータはすでに表示されているため、2つ先のデータに入れ替える
+			int index = card.DataIndex < 2 ? card.DataIndex : card.DataIndex + 2;
             UpdateCard(card, index);
         }
 
