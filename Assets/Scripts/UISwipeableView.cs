@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SwipeableView
@@ -60,6 +61,8 @@ namespace SwipeableView
             card.SetVisible(false);
             card.ActionRightSwiped += UpdateCardPosition;
             card.ActionLeftSwiped += UpdateCardPosition;
+			card.ActionRightSwiping += MoveFront;
+			card.ActionLeftSwiping += MoveFront;
 
             return card;
         }
@@ -69,7 +72,8 @@ namespace SwipeableView
             // 再背面に移動
             card.transform.SetAsFirstSibling();
             card.UpdatePosition(Vector3.zero);
-            card.UpdateRotation(Vector3.zero);
+			card.UpdateRotation(Vector3.zero);
+			card.UpdateScale(transform.childCount == 1 ? 1f : 0.92f);
 
 			var swipeTarget = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
 			swiper.SetCard(swipeTarget);
@@ -92,6 +96,19 @@ namespace SwipeableView
             card.DataIndex = dataIndex;
             card.UpdateContent(data[dataIndex]);
         }
+
+		private void MoveFront(UISwipeableCard<TData, TContext> card, float rate)
+		{
+			var nextCard = cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
+			if (nextCard == null)
+			{
+				return;
+			}
+
+			// TODO: スワイプ中なのかスワイプを中断して元に戻っている途中なのかを判定する必要がある
+
+			nextCard.UpdateScale(Mathf.Lerp(0.92f, 1f, rate));
+		}
 	}
 
     public class SwipeableViewNullContext {}
