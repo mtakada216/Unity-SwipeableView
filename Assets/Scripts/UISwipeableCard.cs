@@ -6,9 +6,6 @@ namespace SwipeableView
 {
     public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
     {
-		[SerializeField]
-		private float maxInclinedAngle = 10f;
-
         public int DataIndex { get; set; }
         public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped { get; set; }
         public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped { get; set; }
@@ -49,13 +46,14 @@ namespace SwipeableView
 			cachedRect.localScale = scale * Vector3.one;
 		}
 
+		private const float MAX_INCLINED_ANGLE = 10f;
         #region Swipe
 		public void Swipe(Vector2 position)
 		{
 			UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
 
 			var t = cachedRect.localPosition.x / GetRequiredDistance(cachedRect.localPosition.x);
-			var maxAngle = cachedRect.localPosition.x < 0 ? maxInclinedAngle : -maxInclinedAngle;
+			var maxAngle = cachedRect.localPosition.x < 0 ? MAX_INCLINED_ANGLE : -MAX_INCLINED_ANGLE;
 			var rotation = Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t);
 			UpdateRotation(rotation);
 

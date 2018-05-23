@@ -79,7 +79,7 @@ namespace SwipeableView
 			swiper.SetCard(swipeTarget);
             // 3枚目以降のカードだった場合、
             // 次のデータはすでに表示されているため、2つ先のデータに入れ替える
-			int index = card.DataIndex < 2 ? card.DataIndex : card.DataIndex + 2;
+			int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
             UpdateCard(card, index);
         }
 
