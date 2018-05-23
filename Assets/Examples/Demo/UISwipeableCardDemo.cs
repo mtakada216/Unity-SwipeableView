@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace SwipeableView
 {
-    public class UISwipeableCardExample01 : UISwipeableCard<CardDataExample01>
+    public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
     {
         [SerializeField]
         private Image image;
@@ -17,7 +17,7 @@ namespace SwipeableView
             rect = transform as RectTransform;
 		}
 
-		public override void UpdateContent(CardDataExample01 data)
+		public override void UpdateContent(DemoCardData data)
 		{
             image.color = data.color;
 		}

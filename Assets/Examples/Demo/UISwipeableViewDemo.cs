@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace SwipeableView
 {
-    public class UISwipeableViewExample01 : UISwipeableView<CardDataExample01>
+    public class UISwipeableViewDemo : UISwipeableView<DemoCardData>
     {
-        public void UpdateData(List<CardDataExample01> data)
+        public void UpdateData(List<DemoCardData> data)
         {
             base.Initialize(data);
         }

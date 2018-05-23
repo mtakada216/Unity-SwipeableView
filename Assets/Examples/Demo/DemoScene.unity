@@ -123,6 +123,8 @@ GameObject:
   - component: {fileID: 21468640}
   - component: {fileID: 21468639}
   - component: {fileID: 21468641}
+  - component: {fileID: 21468643}
+  - component: {fileID: 21468642}
   m_Layer: 5
   m_Name: SwipeableView
   m_TagString: Untagged
@@ -138,10 +140,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 21468638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0630c3c78b1440299e6690c9f8dec95, type: 3}
+  m_Script: {fileID: 11500000, guid: a83fce36f627640d08d8f0169b676b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardPrefab: {fileID: 1903154248421992, guid: 07443c1a34d044aa79f773b1f241df07, type: 2}
+  cardPrefab: {fileID: 1604774215811454, guid: 07443c1a34d044aa79f773b1f241df07, type: 2}
   cardRoot: {fileID: 21468640}
   swiper: {fileID: 21468641}
 --- !u!224 &21468640
@@ -174,6 +176,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   swipeSensitivity: 1
+--- !u!114 &21468642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 21468638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &21468643
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 21468638}
 --- !u!1 &440038956
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce40f213d10740f49efce4c97e35ff4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  swipeableView: {fileID: 21468639}
+  swipeableView: {fileID: 0}
 --- !u!114 &1085755194
 MonoBehaviour:
   m_ObjectHideFlags: 0
