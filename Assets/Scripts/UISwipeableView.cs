@@ -69,7 +69,7 @@ namespace SwipeableView
 
         protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
         {
-            // 再背面に移動
+            // move to the back
             card.transform.SetAsFirstSibling();
             card.UpdatePosition(Vector3.zero);
 			card.UpdateRotation(Vector3.zero);
@@ -77,15 +77,15 @@ namespace SwipeableView
 
 			var swipeTarget = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
 			swiper.SetCard(swipeTarget);
-            // 3枚目以降のカードだった場合、
-            // 次のデータはすでに表示されているため、2つ先のデータに入れ替える
+			// When there are three or more data,
+			// Replace card index with the seconde index from here.
 			int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
             UpdateCard(card, index);
         }
 
         private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
-            // データが存在しなければ非表示
+			// if data doesn't exist hide card
             if (dataIndex < 0 || dataIndex > data.Count - 1)
             {
                 card.SetVisible(false);

@@ -5,20 +5,16 @@ namespace SwipeableView
 {
 	public class UISwiper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [SerializeField]
-        private float swipeSensitivity = 1f;
-
-        private RectTransform viewRect;
+		private RectTransform cardRect;
 
 		private ISwipeable card;
 		public void SetCard(GameObject card)
 		{
 			this.card = card.GetComponent<ISwipeable>();
-			viewRect = card.transform as RectTransform;
+			cardRect = card.transform as RectTransform;
 		}
 
         private Vector2 pointerStartLocalPosition;
-        private Vector2 startDragPosition;
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -28,13 +24,11 @@ namespace SwipeableView
 
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewRect,
+                cardRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out pointerStartLocalPosition
             );
-
-            startDragPosition = Vector2.zero;
         }
 
         private Vector2 dragCurrentPosition;
@@ -47,7 +41,7 @@ namespace SwipeableView
 
             Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                viewRect,
+                cardRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out localCursor
@@ -56,14 +50,7 @@ namespace SwipeableView
                 return;
             }
 
-            // pivot位置のの変更によってpositionが変化している可能性があるため、
-            // このタイミングでドラッグ開始位置を取得する
-            if (startDragPosition == Vector2.zero)
-            {
-                startDragPosition = localCursor;
-            }
-
-            var pointerDelta = localCursor - startDragPosition;
+			var pointerDelta = localCursor - pointerStartLocalPosition;
 
             if (card != null)
             {
