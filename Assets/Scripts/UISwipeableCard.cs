@@ -46,8 +46,16 @@ namespace SwipeableView
 			cachedRect.localScale = scale * Vector3.one;
 		}
 
+		public virtual void SwipingToRight(float rate)
+		{
+		}
+
+		public virtual void SwipingToLeft(float rate)
+		{
+		}
+
 		private const float MAX_INCLINED_ANGLE = 10f;
-        #region Swipe
+		#region Swipe
 		public void Swipe(Vector2 position)
 		{
 			UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
@@ -57,8 +65,9 @@ namespace SwipeableView
 			var rotation = Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t);
 			UpdateRotation(rotation);
 
-			if (position.x > 0)
+			if (cachedRect.localPosition.x > 0)
 			{
+				SwipingToRight(t);
 				if (ActionRightSwiping != null)
 				{
 					ActionRightSwiping.Invoke(this, t);
@@ -66,6 +75,7 @@ namespace SwipeableView
 			}
 			else
 			{
+				SwipingToLeft(t);
 				if (ActionLeftSwiping != null)
 				{
 					ActionLeftSwiping.Invoke(this, t);
@@ -132,7 +142,6 @@ namespace SwipeableView
 
 		private IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
 		{
-
 			yield return PlayAnimationCoroutine(
 				diff =>
 				{
@@ -157,6 +166,7 @@ namespace SwipeableView
 				{
 					float rate = 1 - Mathf.Clamp01(diff / DURATION);
 					float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, rate);
+					cachedRect.localEulerAngles = new Vector3(from.x, from.y, angleZ);
 				},
 				() =>
 				{
@@ -195,4 +205,3 @@ namespace SwipeableView
     {
     }
 }
-

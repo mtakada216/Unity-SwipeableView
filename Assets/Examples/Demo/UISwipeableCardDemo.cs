@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace SwipeableView
@@ -8,18 +6,31 @@ namespace SwipeableView
     public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
     {
         [SerializeField]
-        private Image image;
+		private Image bg;
 
-        private RectTransform rect;
+		[SerializeField]
+		private CanvasGroup imgLike;
 
-		private void Awake()
-		{
-            rect = transform as RectTransform;
-		}
+		[SerializeField]
+		private CanvasGroup imgNope;
+
 
 		public override void UpdateContent(DemoCardData data)
 		{
-            image.color = data.color;
+            bg.color = data.color;
+
+			imgLike.alpha = 0;
+			imgNope.alpha = 0;
+		}
+
+		public override void SwipingToRight(float rate)
+		{
+			imgLike.alpha = rate;
+		}
+
+		public override void SwipingToLeft(float rate)
+		{
+			imgNope.alpha = rate;
 		}
 	}
 }
