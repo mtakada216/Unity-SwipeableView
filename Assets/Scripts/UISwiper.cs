@@ -22,6 +22,11 @@ namespace SwipeableView
                 return;
             }
 
+			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+			{
+				return;
+			}
+
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 cardRect,
@@ -39,6 +44,11 @@ namespace SwipeableView
                 return;
             }
 
+			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+			{
+				return;
+			}
+
             Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 cardRect,
@@ -51,11 +61,7 @@ namespace SwipeableView
             }
 
 			var pointerDelta = localCursor - pointerStartLocalPosition;
-
-            if (card != null)
-            {
-				card.Swipe(pointerDelta);
-            }
+			card.Swipe(pointerDelta);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -65,10 +71,12 @@ namespace SwipeableView
                 return;
             }
 
-            if (card != null)
-            {
-                card.EndSwipe();
-            }
+			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+			{
+				return;
+			}
+
+            card.EndSwipe();
         }
 	}
 }
