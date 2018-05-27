@@ -14,6 +14,18 @@ namespace SwipeableView
 			cardRect = card.transform as RectTransform;
 		}
 
+		public void AutoSwipeTo(Direction direction)
+		{
+			if (direction == Direction.Right)
+			{
+				card.AutoSwipeToRight(Vector3.zero);
+			}
+			else
+			{
+				card.AutoSwipeToLeft(Vector3.zero);
+			}
+		}
+
         private Vector2 pointerStartLocalPosition;
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {

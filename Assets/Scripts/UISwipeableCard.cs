@@ -29,6 +29,9 @@ namespace SwipeableView
 			}
 
 			var t = GetCurrentPosition(cachedRect.localPosition.x);
+			var maxAngle = cachedRect.localPosition.x < 0 ? MAX_INCLINED_ANGLE : -MAX_INCLINED_ANGLE;
+			UpdateRotation(Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t));
+
 			if (cachedRect.localPosition.x > 0)
 			{
 				SwipingToRight(t);
@@ -85,39 +88,24 @@ namespace SwipeableView
 
 
 		private const float MAX_INCLINED_ANGLE = 10f;
-		#region Swipe
+		#region Swipeable
 		public void Swipe(Vector2 position)
 		{
 			UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
-
-			var t = GetCurrentPosition(cachedRect.localPosition.x);
-			var maxAngle = cachedRect.localPosition.x < 0 ? MAX_INCLINED_ANGLE : -MAX_INCLINED_ANGLE;
-			var rotation = Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t);
-			UpdateRotation(rotation);
 		}
 
 		public void EndSwipe()
 		{
+			// over required distance -> Auto swipe
 			if (IsSwipedRight(cachedRect.localPosition))
 			{
-				MoveOutViewRight(cachedRect.localPosition, () =>
-				{
-					if (ActionRightSwiped != null)
-					{
-						ActionRightSwiped.Invoke(this);
-					}
-				});
+				AutoSwipeToRight(cachedRect.localPosition);
 			}
 			else if (IsSwipedLeft(cachedRect.localPosition))
 			{
-				MoveOutViewLeft(cachedRect.localPosition, () =>
-				{
-					if (ActionLeftSwiped != null)
-					{
-						ActionLeftSwiped.Invoke(this);
-					}
-				});
+				AutoSwipeToLeft(cachedRect.localPosition);
 			}
+			// Not been reached required distance -> Return to default position
 			else
 			{
 				StartCoroutine(MoveCoroutine(cachedRect.localPosition, Vector3.zero));
@@ -125,7 +113,33 @@ namespace SwipeableView
 			}
 		}
 
-        private bool IsSwipedRight(Vector3 position)
+		public void AutoSwipeToRight(Vector3 from)
+		{
+			Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
+			StartCoroutine(MoveCoroutine(from, to, () =>
+			{
+				if (ActionRightSwiped != null)
+				{
+					ActionRightSwiped.Invoke(this);
+				}
+			}));
+		}
+
+		public void AutoSwipeToLeft(Vector3 from)
+		{
+			Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
+			StartCoroutine(MoveCoroutine(from, to, () =>
+			{
+				if (ActionLeftSwiped != null)
+				{
+					ActionLeftSwiped.Invoke(this);
+				}
+			}));
+		}
+
+		#endregion
+
+		private bool IsSwipedRight(Vector3 position)
         {
 			return position.x > 0 && position.x > GetRequiredDistance(position.x);
         }
@@ -134,7 +148,6 @@ namespace SwipeableView
         {
 			return position.x < 0 && position.x < GetRequiredDistance(position.x);
         }
-		#endregion
 
 
 		private float GetRequiredDistance(float positionX)
@@ -147,19 +160,8 @@ namespace SwipeableView
 			return positionX / GetRequiredDistance(positionX);
 		}
 
+
 		private const float DURATION = 0.25f;
-		public void MoveOutViewRight(Vector3 from, Action onComplete)
-		{
-			Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
-			StartCoroutine(MoveCoroutine(from, to, onComplete));
-		}
-
-		public void MoveOutViewLeft(Vector3 from, Action onComplete)
-		{
-			Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
-			StartCoroutine(MoveCoroutine(from, to, onComplete));
-		}
-
 		private IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
 		{
 			yield return PlayAnimationCoroutine(

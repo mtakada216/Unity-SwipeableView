@@ -40,7 +40,12 @@ namespace SwipeableView
             }
 		}
 
-		public void SetContext(TContext context)
+		public void AutoSwipeTo(Direction direction)
+		{
+			swiper.AutoSwipeTo(direction);
+		}
+
+		protected void SetContext(TContext context)
         {
             this.context = context;
 
@@ -53,16 +58,13 @@ namespace SwipeableView
         private UISwipeableCard<TData, TContext> CreateCard()
         {
             var cardObject = Object.Instantiate(cardPrefab, cardRoot);
-            cardPrefab.SetActive(true);
-            cardObject.transform.SetAsLastSibling();
-
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);
             card.SetVisible(false);
             card.ActionRightSwiped += UpdateCardPosition;
             card.ActionLeftSwiped += UpdateCardPosition;
-			card.ActionRightSwiping += MoveFront;
-			card.ActionLeftSwiping += MoveFront;
+			card.ActionRightSwiping += MoveFrontNextCard;
+			card.ActionLeftSwiping += MoveFrontNextCard;
 
             return card;
         }
@@ -97,7 +99,7 @@ namespace SwipeableView
             card.UpdateContent(data[dataIndex]);
         }
 
-		private void MoveFront(UISwipeableCard<TData, TContext> card, float rate)
+		private void MoveFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
 		{
 			var nextCard = cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
 			if (nextCard == null)
@@ -109,8 +111,13 @@ namespace SwipeableView
 		}
 	}
 
-    public class SwipeableViewNullContext {}
+	public enum Direction
+	{
+		Right,
+		Left,
+	}
 
+    public class SwipeableViewNullContext {}
     public class UISwipeableView<TData> : UISwipeableView<TData, SwipeableViewNullContext>
     {
     }
