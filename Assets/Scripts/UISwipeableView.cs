@@ -105,8 +105,6 @@ namespace SwipeableView
 				return;
 			}
 
-			// TODO: スワイプ中なのかスワイプを中断して元に戻っている途中なのかを判定する必要がある
-
 			nextCard.UpdateScale(Mathf.Lerp(0.92f, 1f, rate));
 		}
 	}

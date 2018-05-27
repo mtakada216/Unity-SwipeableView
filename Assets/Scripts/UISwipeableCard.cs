@@ -18,17 +18,54 @@ namespace SwipeableView
             cachedRect = transform as RectTransform;
         }
 
-        public virtual void SetContext(TContext context)
+		private const float EPSILON = 1.192093E-07f;
+		void Update()
+		{
+			if (Math.Abs(cachedRect.localPosition.x) < EPSILON)
+			{
+				SwipingToRight(0);
+				SwipingToLeft(0);
+				return;
+			}
+
+			var t = GetCurrentPosition(cachedRect.localPosition.x);
+			if (cachedRect.localPosition.x > 0)
+			{
+				SwipingToRight(t);
+				if (ActionRightSwiping != null)
+				{
+					ActionRightSwiping.Invoke(this, t);
+				}
+			}
+			else if (cachedRect.localPosition.x < 0)
+			{
+				SwipingToLeft(t);
+				if (ActionLeftSwiping != null)
+				{
+					ActionLeftSwiping.Invoke(this, t);
+				}
+			}
+		}
+
+		public virtual void SetContext(TContext context)
         {
         }
+
+		public virtual void UpdateContent(TData data)
+		{
+		}
+
+		public virtual void SwipingToRight(float rate)
+		{
+		}
+
+		public virtual void SwipingToLeft(float rate)
+		{
+		}
 
         public virtual void SetVisible(bool visible)
         {
             gameObject.SetActive(visible);
-        }
-
-        public virtual void UpdateContent(TData data)
-        {
         }
 
         public virtual void UpdatePosition(Vector3 position)
@@ -46,13 +83,6 @@ namespace SwipeableView
 			cachedRect.localScale = scale * Vector3.one;
 		}
 
-		public virtual void SwipingToRight(float rate)
-		{
-		}
-
-		public virtual void SwipingToLeft(float rate)
-		{
-		}
 
 		private const float MAX_INCLINED_ANGLE = 10f;
 		#region Swipe
@@ -60,27 +90,10 @@ namespace SwipeableView
 		{
 			UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
 
-			var t = cachedRect.localPosition.x / GetRequiredDistance(cachedRect.localPosition.x);
+			var t = GetCurrentPosition(cachedRect.localPosition.x);
 			var maxAngle = cachedRect.localPosition.x < 0 ? MAX_INCLINED_ANGLE : -MAX_INCLINED_ANGLE;
 			var rotation = Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t);
 			UpdateRotation(rotation);
-
-			if (cachedRect.localPosition.x > 0)
-			{
-				SwipingToRight(t);
-				if (ActionRightSwiping != null)
-				{
-					ActionRightSwiping.Invoke(this, t);
-				}
-			}
-			else
-			{
-				SwipingToLeft(t);
-				if (ActionLeftSwiping != null)
-				{
-					ActionLeftSwiping.Invoke(this, t);
-				}
-			}
 		}
 
 		public void EndSwipe()
@@ -121,20 +134,27 @@ namespace SwipeableView
         {
 			return position.x < 0 && position.x < GetRequiredDistance(position.x);
         }
+		#endregion
+
 
 		private float GetRequiredDistance(float positionX)
 		{
 			return positionX > 0 ? cachedRect.rect.size.x / 2 : -(cachedRect.rect.size.x / 2);
 		}
 
+		private float GetCurrentPosition(float positionX)
+		{
+			return positionX / GetRequiredDistance(positionX);
+		}
+
 		private const float DURATION = 0.25f;
-		private void MoveOutViewRight(Vector3 from, Action onComplete)
+		public void MoveOutViewRight(Vector3 from, Action onComplete)
 		{
 			Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
 			StartCoroutine(MoveCoroutine(from, to, onComplete));
 		}
 
-		private void MoveOutViewLeft(Vector3 from, Action onComplete)
+		public void MoveOutViewLeft(Vector3 from, Action onComplete)
 		{
 			Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
 			StartCoroutine(MoveCoroutine(from, to, onComplete));
@@ -197,8 +217,6 @@ namespace SwipeableView
 
 			onComplete.Invoke();
 		}
-
-        #endregion
     }
 
     public class UISwipeableCard<TData> : UISwipeableCard<TData, SwipeableViewNullContext>
