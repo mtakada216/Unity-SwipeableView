@@ -21,5 +21,15 @@ namespace SwipeableView
 
             swipeableView.UpdateData(data);
         }
+
+		public void OnClickLike()
+		{
+			swipeableView.AutoSwipeTo(Direction.Right);
+		}
+
+		public void OnClickNope()
+		{
+			swipeableView.AutoSwipeTo(Direction.Left);
+		}
     }
 }
