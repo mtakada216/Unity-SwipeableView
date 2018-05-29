@@ -1,4 +1,4 @@
-# Unity-SwipeableView
+# Unity-SwipeableView [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](http://mit-license.org)
 
 UISwipeableView is a simple UI components for implementing swipe views like [Tinder](https://tinder.com/).
 Since Only two card objects are generated, performance will not be reduced even if the number of data items increases.
@@ -74,7 +74,7 @@ public class DemoScene : MonoBehaviour
 ```
 
 ## Environment
-Unity2018.1.0b13
+Unity 2018.1.0b13
 
 ## License
 MIT
