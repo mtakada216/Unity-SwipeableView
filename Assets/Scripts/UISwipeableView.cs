@@ -12,8 +12,8 @@ namespace SwipeableView
         [SerializeField]
         private Transform cardRoot;
 
-        [SerializeField]
-        private UISwiper swiper;
+		[SerializeField]
+		private UISwiper swiper;
 
         private List<TData> data = new List<TData>();
         private TContext context;
@@ -34,18 +34,18 @@ namespace SwipeableView
             for (int i = 0; i < createCount; ++i)
             {
                 var card = CreateCard();
-                card.DataIndex = i;
+				card.DataIndex = i;
                 UpdateCardPosition(card);
                 cards.Add(card);
             }
-        }
+		}
 
-        public void AutoSwipeTo(Direction direction)
-        {
-            swiper.AutoSwipeTo(direction);
-        }
+		public void AutoSwipeTo(Direction direction)
+		{
+			swiper.AutoSwipeTo(direction);
+		}
 
-        protected void SetContext(TContext context)
+		protected void SetContext(TContext context)
         {
             this.context = context;
 
