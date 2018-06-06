@@ -74,8 +74,8 @@ public class DemoScene : MonoBehaviour
 ```
 
 #### Prepared Callbacks
-|variable|timing|
-|:--:||:--:|
+| variable | timing |
+|:---:|:---:|
 |ActionRightSwiped|Finish Swiping to the right|
 |ActionLeftSwiped|Finish Swiping to the left|
 |ActionRightSwiping|Swiping to the right|
