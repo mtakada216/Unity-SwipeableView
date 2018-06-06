@@ -74,7 +74,7 @@ public class DemoScene : MonoBehaviour
 ```
 
 ## Environment
-Unity 2018.1.0b13
+Unity 2018.2.0b6
 
 ## License
 MIT
