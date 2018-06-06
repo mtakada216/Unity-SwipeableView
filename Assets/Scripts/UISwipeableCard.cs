@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace SwipeableView
 {
-    public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
-    {
-        public int DataIndex { get; set; }
-        public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped { get; set; }
-        public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped { get; set; }
+	public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
+	{
+		public int DataIndex { get; set; }
+		public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped { get; set; }
+		public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped { get; set; }
 		public Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping { get; set; }
 		public Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping { get; set; }
 
 		private RectTransform cachedRect;
-        void OnEnable()
-        {
-            cachedRect = transform as RectTransform;
-        }
+		void OnEnable()
+		{
+			cachedRect = transform as RectTransform;
+		}
 
 		private const float EPSILON = 1.192093E-07f;
 		void Update()
@@ -51,8 +51,8 @@ namespace SwipeableView
 		}
 
 		public virtual void SetContext(TContext context)
-        {
-        }
+		{
+		}
 
 		public virtual void UpdateContent(TData data)
 		{
@@ -66,20 +66,20 @@ namespace SwipeableView
 		{
 		}
 
-        public virtual void SetVisible(bool visible)
-        {
-            gameObject.SetActive(visible);
-        }
+		public virtual void SetVisible(bool visible)
+		{
+			gameObject.SetActive(visible);
+		}
 
-        public virtual void UpdatePosition(Vector3 position)
-        {
-            cachedRect.localPosition = position;
-        }
+		public virtual void UpdatePosition(Vector3 position)
+		{
+			cachedRect.localPosition = position;
+		}
 
-        public virtual void UpdateRotation(Vector3 rotation)
-        {
+		public virtual void UpdateRotation(Vector3 rotation)
+		{
 			cachedRect.localEulerAngles = rotation;
-        }
+		}
 
 		public virtual void UpdateScale(float scale)
 		{
@@ -140,14 +140,14 @@ namespace SwipeableView
 		#endregion
 
 		private bool IsSwipedRight(Vector3 position)
-        {
+		{
 			return position.x > 0 && position.x > GetRequiredDistance(position.x);
-        }
+		}
 
-        private bool IsSwipedLeft(Vector3 position)
-        {
+		private bool IsSwipedLeft(Vector3 position)
+		{
 			return position.x < 0 && position.x < GetRequiredDistance(position.x);
-        }
+		}
 
 
 		private float GetRequiredDistance(float positionX)
@@ -219,9 +219,9 @@ namespace SwipeableView
 
 			onComplete.Invoke();
 		}
-    }
+	}
 
-    public class UISwipeableCard<TData> : UISwipeableCard<TData, SwipeableViewNullContext>
-    {
-    }
+	public class UISwipeableCard<TData> : UISwipeableCard<TData, SwipeableViewNullContext>
+	{
+	}
 }

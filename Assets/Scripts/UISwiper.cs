@@ -3,28 +3,28 @@ using UnityEngine.EventSystems;
 
 namespace SwipeableView
 {
-	public class UISwiper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class UISwiper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-		private RectTransform cardRect;
+        private RectTransform cardRect;
 
-		private ISwipeable card;
-		public void SetCard(GameObject card)
-		{
-			this.card = card.GetComponent<ISwipeable>();
-			cardRect = card.transform as RectTransform;
-		}
+        private ISwipeable card;
+        public void SetCard(GameObject card)
+        {
+            this.card = card.GetComponent<ISwipeable>();
+            cardRect = card.transform as RectTransform;
+        }
 
-		public void AutoSwipeTo(Direction direction)
-		{
-			if (direction == Direction.Right)
-			{
-				card.AutoSwipeToRight(Vector3.zero);
-			}
-			else
-			{
-				card.AutoSwipeToLeft(Vector3.zero);
-			}
-		}
+        public void AutoSwipeTo(Direction direction)
+        {
+            if (direction == Direction.Right)
+            {
+                card.AutoSwipeToRight(Vector3.zero);
+            }
+            else
+            {
+                card.AutoSwipeToLeft(Vector3.zero);
+            }
+        }
 
         private Vector2 pointerStartLocalPosition;
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
@@ -34,10 +34,10 @@ namespace SwipeableView
                 return;
             }
 
-			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
-			{
-				return;
-			}
+            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            {
+                return;
+            }
 
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -56,10 +56,10 @@ namespace SwipeableView
                 return;
             }
 
-			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
-			{
-				return;
-			}
+            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            {
+                return;
+            }
 
             Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -72,8 +72,8 @@ namespace SwipeableView
                 return;
             }
 
-			var pointerDelta = localCursor - pointerStartLocalPosition;
-			card.Swipe(pointerDelta);
+            var pointerDelta = localCursor - pointerStartLocalPosition;
+            card.Swipe(pointerDelta);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -83,13 +83,13 @@ namespace SwipeableView
                 return;
             }
 
-			if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
-			{
-				return;
-			}
+            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            {
+                return;
+            }
 
             card.EndSwipe();
         }
-	}
+    }
 }
 
