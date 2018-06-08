@@ -74,12 +74,13 @@ public class DemoScene : MonoBehaviour
 ```
 
 #### Prepared Callbacks
-| variable | timing |
-|:---:|:---:|
-|ActionRightSwiped|Finish Swiping to the right|
-|ActionLeftSwiped|Finish Swiping to the left|
-|ActionRightSwiping|Swiping to the right|
-|ActionLeftSwiping|Swiping to the Left|
+UISwipeableCard has 4 events that can be subscribed.
+```c#
+public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;          // Called when finish Swiping to the right.
+public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;           // Called when finish Swiping to the left.
+public Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;  // Called when swiping to the right. float(0-1)
+public Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;   // Called when swiping to the left. float(0-1)
+```
 
 
 ## Environment
