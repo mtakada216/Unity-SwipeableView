@@ -7,10 +7,10 @@ namespace SwipeableView
 	public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
 	{
 		public int DataIndex { get; set; }
-		public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped { get; set; }
-		public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped { get; set; }
-		public Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping { get; set; }
-		public Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping { get; set; }
+		public event Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;
+		public event Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;
+		public event Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;
+		public event Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;
 
 		private RectTransform cachedRect;
 		void OnEnable()
