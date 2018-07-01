@@ -48,7 +48,6 @@ namespace SwipeableView
             );
         }
 
-        private Vector2 dragCurrentPosition;
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
@@ -63,11 +62,11 @@ namespace SwipeableView
 
             Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                cardRect,
-                eventData.position,
-                eventData.pressEventCamera,
-                out localCursor
-            ))
+                    cardRect,
+                    eventData.position,
+                    eventData.pressEventCamera,
+                    out localCursor
+                ))
             {
                 return;
             }
@@ -92,4 +91,3 @@ namespace SwipeableView
         }
     }
 }
-
