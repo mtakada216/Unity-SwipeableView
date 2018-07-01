@@ -18,19 +18,17 @@ namespace SwipeableView
         private List<TData> data = new List<TData>();
         private TContext context;
 
-        private readonly List<UISwipeableCard<TData, TContext>> cards
-            = new List<UISwipeableCard<TData, TContext>>(MAX_CREATE_COUNT);
+        private readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(MAX_CREATE_COUNT);
 
         private const int MAX_CREATE_COUNT = 2;
-
 
         public void Initialize(List<TData> data)
         {
             this.data = data;
 
-            int createCount = data.Count > MAX_CREATE_COUNT 
-                    ? MAX_CREATE_COUNT : data.Count;
-            
+            int createCount = data.Count > MAX_CREATE_COUNT ?
+                MAX_CREATE_COUNT : data.Count;
+
             for (int i = 0; i < createCount; ++i)
             {
                 var card = CreateCard();
@@ -117,9 +115,7 @@ namespace SwipeableView
         Left,
     }
 
-    public class SwipeableViewNullContext {}
+    public class SwipeableViewNullContext { }
     public class UISwipeableView<TData> : UISwipeableView<TData, SwipeableViewNullContext>
-    {
-    }
+    { }
 }
-
