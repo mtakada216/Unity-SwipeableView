@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SwipeableView
 {
-    public class DemoCardData
+    public class BasicCardData
     {
         public Color color;
     }

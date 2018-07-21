@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace SwipeableView
 {
-    public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
+    public class UISwipeableCardBasic : UISwipeableCard<BasicCardData>
     {
         [SerializeField]
         private Image bg;
@@ -14,7 +14,7 @@ namespace SwipeableView
         [SerializeField]
         private CanvasGroup imgNope;
 
-        public override void UpdateContent(DemoCardData data)
+        public override void UpdateContent(BasicCardData data)
         {
             bg.color = data.color;
 

@@ -5,15 +5,15 @@ using UnityEngine;
 
 namespace SwipeableView
 {
-    public class DemoScene : MonoBehaviour
+    public class BasicScene : MonoBehaviour
     {
         [SerializeField]
-        private UISwipeableViewDemo swipeableView;
+        private UISwipeableViewBasic swipeableView;
 
         void Start()
         {
             var data = Enumerable.Range(0, 20)
-                .Select(i => new DemoCardData
+                .Select(i => new BasicCardData
                 {
                     color = new Color(Random.value, Random.value, Random.value, 1.0f)
                 })
