@@ -64,7 +64,7 @@ public class DemoScene : MonoBehaviour
         var data = Enumerable.Range(0, 20)
             .Select(i => new DemoCardData
             {
-            color = new Color(Random.value, Random.value, Random.value, 1.0f)
+                color = new Color(Random.value, Random.value, Random.value, 1.0f)
             })
             .ToList();
 
@@ -76,10 +76,10 @@ public class DemoScene : MonoBehaviour
 #### Prepared Callbacks
 UISwipeableCard has 4 events that can be subscribed.
 ```c#
-public Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;          // Called when finish Swiping to the right.
-public Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;           // Called when finish Swiping to the left.
-public Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;  // Called when swiping to the right. float(0-1)
-public Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;   // Called when swiping to the left. float(0-1)
+public event Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;          // Called when finish Swiping to the right.
+public event Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;           // Called when finish Swiping to the left.
+public event Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;  // Called when swiping to the right. float(0-1)
+public event Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;   // Called when swiping to the left. float(0-1)
 ```
 
 
