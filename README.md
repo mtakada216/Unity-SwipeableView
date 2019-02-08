@@ -11,8 +11,6 @@ Check out the [demo](https://github.com/m4tcha/Unity-SwipeableView/archive/maste
 
 ### 1. Create your data object.
 ```c#
-using UnityEngine;
-
 public class DemoCardData
 {
     public Color color;
@@ -21,8 +19,6 @@ public class DemoCardData
 
 ### 2. Create SwipeableView by extends UISwipeableView.
 ```c#
-using System.Collections.Generic;
-
 public class UISwipeableViewDemo : UISwipeableView<DemoCardData>
 {
     public void UpdateData(List<DemoCardData> data)
@@ -34,13 +30,9 @@ public class UISwipeableViewDemo : UISwipeableView<DemoCardData>
 
 ### 3. Create SwipeableCard by extends UISwipeableCard.
 ```c#
-using UnityEngine;
-using UnityEngine.UI;
-
 public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
 {
-    [SerializeField]
-    private Image bg;
+    [SerializeField] private Image bg;
 
     public override void UpdateContent(DemoCardData data)
     {
@@ -51,13 +43,9 @@ public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
 
 ### 4. Pass data to the SwipeableView.
 ```c#
-using UnityEngine;
-using System.Linq;
-
 public class DemoScene : MonoBehaviour
 {
-    [SerializeField]
-    private UISwipeableViewDemo swipeableView;
+    [SerializeField] private UISwipeableViewDemo swipeableView;
 
     void Start()
     {
@@ -73,18 +61,8 @@ public class DemoScene : MonoBehaviour
 }
 ```
 
-#### Prepared Callbacks
-UISwipeableCard has 4 events that can be subscribed.
-```c#
-public event Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;          // Called when finish Swiping to the right.
-public event Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;           // Called when finish Swiping to the left.
-public event Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;  // Called when swiping to the right. float(0-1)
-public event Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;   // Called when swiping to the left. float(0-1)
-```
-
-
 ## Environment
-Unity 2018.2.0b6
+Unity 2018.2.8f1
 
 ## License
 MIT
