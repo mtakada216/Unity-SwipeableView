@@ -6,19 +6,29 @@ namespace SwipeableView
 {
     public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
     {
+        /// <summary>
+        /// Index of Card Data.
+        /// </summary>
         public int DataIndex { get; set; }
-        public event Action<UISwipeableCard<TData, TContext>> ActionRightSwiped;
-        public event Action<UISwipeableCard<TData, TContext>> ActionLeftSwiped;
-        public event Action<UISwipeableCard<TData, TContext>, float> ActionRightSwiping;
-        public event Action<UISwipeableCard<TData, TContext>, float> ActionLeftSwiping;
+
+        /// <summary>
+        /// Callbacks
+        /// </summary>
+        public event Action<UISwipeableCard<TData, TContext>> ActionSwipedRight;
+        public event Action<UISwipeableCard<TData, TContext>> ActionSwipedLeft;
+        public event Action<UISwipeableCard<TData, TContext>, float> ActionSwipingRight;
+        public event Action<UISwipeableCard<TData, TContext>, float> ActionSwipingLeft;
 
         private RectTransform cachedRect;
+
+        private const float EPSILON = 1.192093E-07f;
+        private const float MAX_INCLINED_ANGLE = 10f;
+
         void OnEnable()
         {
             cachedRect = transform as RectTransform;
         }
 
-        private const float EPSILON = 1.192093E-07f;
         void Update()
         {
             if (Math.Abs(cachedRect.localPosition.x) < EPSILON)
@@ -35,18 +45,12 @@ namespace SwipeableView
             if (cachedRect.localPosition.x > 0)
             {
                 SwipingToRight(t);
-                if (ActionRightSwiping != null)
-                {
-                    ActionRightSwiping.Invoke(this, t);
-                }
+                ActionSwipingRight?.Invoke(this, t);
             }
             else if (cachedRect.localPosition.x < 0)
             {
                 SwipingToLeft(t);
-                if (ActionLeftSwiping != null)
-                {
-                    ActionLeftSwiping.Invoke(this, t);
-                }
+                ActionSwipingLeft?.Invoke(this, t);
             }
         }
 
@@ -82,8 +86,8 @@ namespace SwipeableView
             cachedRect.localScale = scale * Vector3.one;
         }
 
-        private const float MAX_INCLINED_ANGLE = 10f;
-#region Swipeable
+
+#region ISwipeable
         public void Swipe(Vector2 position)
         {
             UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
@@ -113,9 +117,9 @@ namespace SwipeableView
             Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
-                if (ActionRightSwiped != null)
+                if (ActionSwipedRight != null)
                 {
-                    ActionRightSwiped.Invoke(this);
+                    ActionSwipedRight.Invoke(this);
                 }
             }));
         }
@@ -125,13 +129,12 @@ namespace SwipeableView
             Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
-                if (ActionLeftSwiped != null)
+                if (ActionSwipedLeft != null)
                 {
-                    ActionLeftSwiped.Invoke(this);
+                    ActionSwipedLeft.Invoke(this);
                 }
             }));
         }
-
 #endregion
 
         private bool IsSwipedRight(Vector3 position)
@@ -166,10 +169,7 @@ namespace SwipeableView
                 () =>
                 {
                     cachedRect.localPosition = to;
-                    if (onComplete != null)
-                    {
-                        onComplete.Invoke();
-                    }
+                    onComplete?.Invoke();
                 }
             );
         }
@@ -186,10 +186,7 @@ namespace SwipeableView
                 () =>
                 {
                     cachedRect.localEulerAngles = to;
-                    if (onComplete != null)
-                    {
-                        onComplete.Invoke();
-                    }
+                    onComplete?.Invoke();
                 }
             );
         }

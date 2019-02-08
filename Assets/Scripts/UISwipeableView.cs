@@ -59,15 +59,15 @@ namespace SwipeableView
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(context);
             card.SetVisible(false);
-            card.ActionRightSwiped += UpdateCardPosition;
-            card.ActionLeftSwiped += UpdateCardPosition;
-            card.ActionRightSwiping += MoveFrontNextCard;
-            card.ActionLeftSwiping += MoveFrontNextCard;
+            card.ActionSwipedRight += UpdateCardPosition;
+            card.ActionSwipedLeft += UpdateCardPosition;
+            card.ActionSwipingRight += MoveFrontNextCard;
+            card.ActionSwipingLeft += MoveFrontNextCard;
 
             return card;
         }
 
-        protected void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
+        private void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
         {
             // move to the back
             card.transform.SetAsFirstSibling();

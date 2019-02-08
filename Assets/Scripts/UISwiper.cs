@@ -5,24 +5,24 @@ namespace SwipeableView
 {
     public class UISwiper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private RectTransform cardRect;
+        private RectTransform cachedRect;
 
-        private ISwipeable card;
+        private ISwipeable swipeable;
         public void SetCard(GameObject card)
         {
-            this.card = card.GetComponent<ISwipeable>();
-            cardRect = card.transform as RectTransform;
+            swipeable = card.GetComponent<ISwipeable>();
+            cachedRect = card.transform as RectTransform;
         }
 
         public void AutoSwipeTo(Direction direction)
         {
             if (direction == Direction.Right)
             {
-                card.AutoSwipeToRight(Vector3.zero);
+                swipeable.AutoSwipeToRight(Vector3.zero);
             }
             else
             {
-                card.AutoSwipeToLeft(Vector3.zero);
+                swipeable.AutoSwipeToLeft(Vector3.zero);
             }
         }
 
@@ -34,14 +34,14 @@ namespace SwipeableView
                 return;
             }
 
-            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            if (cachedRect == null || !cachedRect.gameObject.activeInHierarchy)
             {
                 return;
             }
 
             pointerStartLocalPosition = Vector2.zero;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                cardRect,
+                cachedRect,
                 eventData.position,
                 eventData.pressEventCamera,
                 out pointerStartLocalPosition
@@ -55,14 +55,14 @@ namespace SwipeableView
                 return;
             }
 
-            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            if (cachedRect == null || !cachedRect.gameObject.activeInHierarchy)
             {
                 return;
             }
 
             Vector2 localCursor;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    cardRect,
+                    cachedRect,
                     eventData.position,
                     eventData.pressEventCamera,
                     out localCursor
@@ -72,7 +72,7 @@ namespace SwipeableView
             }
 
             var pointerDelta = localCursor - pointerStartLocalPosition;
-            card.Swipe(pointerDelta);
+            swipeable.Swipe(pointerDelta);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -82,12 +82,12 @@ namespace SwipeableView
                 return;
             }
 
-            if (cardRect == null || !cardRect.gameObject.activeInHierarchy)
+            if (cachedRect == null || !cachedRect.gameObject.activeInHierarchy)
             {
                 return;
             }
 
-            card.EndSwipe();
+            swipeable.EndSwipe();
         }
     }
 }
