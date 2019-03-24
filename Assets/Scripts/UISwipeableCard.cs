@@ -23,6 +23,7 @@ namespace SwipeableView
 
         private const float EPSILON = 1.192093E-07f;
         private const float MAX_INCLINED_ANGLE = 10f;
+        private static readonly AnimationCurve EASE = AnimationCurve.Linear(0.19f, 1f, 0.22f, 1f);
 
         void OnEnable()
         {
@@ -180,7 +181,8 @@ namespace SwipeableView
                 diff =>
                 {
                     float rate = 1 - Mathf.Clamp01(diff / DURATION);
-                    float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, rate);
+                    float value = EASE.Evaluate(rate);
+                    float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, value);
                     cachedRect.localEulerAngles = new Vector3(from.x, from.y, angleZ);
                 },
                 () =>
