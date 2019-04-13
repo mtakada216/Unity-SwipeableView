@@ -62,7 +62,10 @@ public class DemoScene : MonoBehaviour
 ```
 
 ## Environment
-Unity 2018.2.16f1
+Unity 2018.3.11f1
 
 ## License
 MIT
+
+## Author
+[kiepng](https://github.com/kiepng)
