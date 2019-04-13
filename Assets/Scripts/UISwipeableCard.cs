@@ -151,25 +151,19 @@ namespace SwipeableView
 
         public void AutoSwipeRight(Vector3 from)
         {
-            Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
+            var to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
-                if (ActionSwipedRight != null)
-                {
-                    ActionSwipedRight.Invoke(this);
-                }
+                ActionSwipedRight?.Invoke(this);
             }));
         }
 
         public void AutoSwipeLeft(Vector3 from)
         {
-            Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
+            var to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
-                if (ActionSwipedLeft != null)
-                {
-                    ActionSwipedLeft.Invoke(this);
-                }
+                ActionSwipedLeft?.Invoke(this);
             }));
         }
 #endregion
