@@ -22,13 +22,13 @@ namespace SwipeableView
             imgNope.alpha = 0;
         }
 
-        public override void SwipingToRight(float rate)
+        protected override void SwipingRight(float rate)
         {
             imgLike.alpha = rate;
             imgNope.alpha = 0;
         }
 
-        public override void SwipingToLeft(float rate)
+        protected override void SwipingLeft(float rate)
         {
             imgNope.alpha = rate;
             imgLike.alpha = 0;

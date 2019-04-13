@@ -19,11 +19,12 @@ namespace SwipeableView
         public event Action<UISwipeableCard<TData, TContext>, float> ActionSwipingRight;
         public event Action<UISwipeableCard<TData, TContext>, float> ActionSwipingLeft;
 
+        protected TContext Context { get; private set; }
+
         private RectTransform cachedRect;
 
-        private const float EPSILON = 1.192093E-07f;
-        private const float MAX_INCLINED_ANGLE = 10f;
-        private static readonly AnimationCurve EASE = AnimationCurve.Linear(0.19f, 1f, 0.22f, 1f);
+        private const float _epsion = 1.192093E-07f;
+        private const float _maxInclinedAngle = 10f;
 
         void OnEnable()
         {
@@ -32,61 +33,96 @@ namespace SwipeableView
 
         void Update()
         {
-            if (Math.Abs(cachedRect.localPosition.x) < EPSILON)
+            var rectPosX = cachedRect.localPosition.x;
+            if (Math.Abs(rectPosX) < _epsion)
             {
-                SwipingToRight(0);
-                SwipingToLeft(0);
+                SwipingRight(0);
+                SwipingLeft(0);
                 return;
             }
 
-            var t = GetCurrentPosition(cachedRect.localPosition.x);
-            var maxAngle = cachedRect.localPosition.x < 0 ? MAX_INCLINED_ANGLE : -MAX_INCLINED_ANGLE;
+            var t = GetCurrentPosition(rectPosX);
+            var maxAngle = rectPosX < 0 ? _maxInclinedAngle : -_maxInclinedAngle;
             UpdateRotation(Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t));
 
-            if (cachedRect.localPosition.x > 0)
+            if (rectPosX > 0)
             {
-                SwipingToRight(t);
+                SwipingRight(t);
                 ActionSwipingRight?.Invoke(this, t);
             }
-            else if (cachedRect.localPosition.x < 0)
+            else if (rectPosX < 0)
             {
-                SwipingToLeft(t);
+                SwipingLeft(t);
                 ActionSwipingLeft?.Invoke(this, t);
             }
         }
 
-        public virtual void SetContext(TContext context)
-        { }
 
+        /// <summary>
+        /// Updates the Content.
+        /// </summary>
+        /// <param name="data"></param>
         public virtual void UpdateContent(TData data)
         { }
 
-        public virtual void SwipingToRight(float rate)
-        { }
+        /// <summary>
+        /// Set the Context.
+        /// </summary>
+        /// <param name="context"></param>
+        public virtual void SetContext(TContext context)
+        {
+            Context = context;
+        }
 
-        public virtual void SwipingToLeft(float rate)
-        { }
-
+        /// <summary>
+        /// Set the visible.
+        /// </summary>
+        /// <param name="visible"></param>
         public virtual void SetVisible(bool visible)
         {
             gameObject.SetActive(visible);
         }
 
+        /// <summary>
+        /// Updates the position.
+        /// </summary>
+        /// <param name="position"></param>
         public virtual void UpdatePosition(Vector3 position)
         {
             cachedRect.localPosition = position;
         }
 
+        /// <summary>
+        /// Updates the rotaion.
+        /// </summary>
+        /// <param name="rotation"></param>
         public virtual void UpdateRotation(Vector3 rotation)
         {
             cachedRect.localEulerAngles = rotation;
         }
 
+        /// <summary>
+        /// Update the scale.
+        /// </summary>
+        /// <param name="scale"></param>
         public virtual void UpdateScale(float scale)
         {
             cachedRect.localScale = scale * Vector3.one;
         }
 
+        /// <summary>
+        /// Right swiping.
+        /// </summary>
+        /// <param name="rate"></param>
+        protected virtual void SwipingRight(float rate)
+        { }
+
+        /// <summary>
+        /// Left swiping.
+        /// </summary>
+        /// <param name="rate"></param>
+        protected virtual void SwipingLeft(float rate)
+        { }
 
 #region ISwipeable
         public void Swipe(Vector2 position)
@@ -99,11 +135,11 @@ namespace SwipeableView
             // over required distance -> Auto swipe
             if (IsSwipedRight(cachedRect.localPosition))
             {
-                AutoSwipeToRight(cachedRect.localPosition);
+                AutoSwipeRight(cachedRect.localPosition);
             }
             else if (IsSwipedLeft(cachedRect.localPosition))
             {
-                AutoSwipeToLeft(cachedRect.localPosition);
+                AutoSwipeLeft(cachedRect.localPosition);
             }
             // Not been reached required distance -> Return to default position
             else
@@ -113,7 +149,7 @@ namespace SwipeableView
             }
         }
 
-        public void AutoSwipeToRight(Vector3 from)
+        public void AutoSwipeRight(Vector3 from)
         {
             Vector3 to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
@@ -125,7 +161,7 @@ namespace SwipeableView
             }));
         }
 
-        public void AutoSwipeToLeft(Vector3 from)
+        public void AutoSwipeLeft(Vector3 from)
         {
             Vector3 to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
@@ -181,8 +217,7 @@ namespace SwipeableView
                 diff =>
                 {
                     float rate = 1 - Mathf.Clamp01(diff / DURATION);
-                    float value = EASE.Evaluate(rate);
-                    float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, value);
+                    float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, rate);
                     cachedRect.localEulerAngles = new Vector3(from.x, from.y, angleZ);
                 },
                 () =>

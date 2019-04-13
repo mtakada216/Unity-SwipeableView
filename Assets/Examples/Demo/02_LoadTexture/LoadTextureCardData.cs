@@ -1,6 +1,3 @@
-using UnityEngine;
-using UnityEngine.UI;
-
 namespace SwipeableView
 {
     public class LoadTextureCardData

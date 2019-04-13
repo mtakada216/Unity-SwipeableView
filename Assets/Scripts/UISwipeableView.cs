@@ -15,19 +15,25 @@ namespace SwipeableView
         [SerializeField]
         private UISwiper swiper = default;
 
+        protected TContext Context { get; }
+
         private List<TData> data = new List<TData>();
-        private TContext context;
 
-        private readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(MAX_CREATE_COUNT);
+        private readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(_maxCreateCardCount);
 
-        private const int MAX_CREATE_COUNT = 2;
+        private const int _maxCreateCardCount = 2;
 
-        public void Initialize(List<TData> data)
+
+        /// <summary>
+        /// Initialize of SwipeableView
+        /// </summary>
+        /// <param name="data"></param>
+        protected void Initialize(List<TData> data)
         {
             this.data = data;
 
-            int createCount = data.Count > MAX_CREATE_COUNT ?
-                MAX_CREATE_COUNT : data.Count;
+            int createCount = data.Count > _maxCreateCardCount ?
+                _maxCreateCardCount : data.Count;
 
             for (int i = 0; i < createCount; ++i)
             {
@@ -38,31 +44,25 @@ namespace SwipeableView
             }
         }
 
-        public void AutoSwipeTo(Direction direction)
+        /// <summary>
+        /// Auto Swipe to the specified derection.
+        /// </summary>
+        /// <param name="direction"></param>
+        public void AutoSwipe(SwipeDirection direction)
         {
-            swiper.AutoSwipeTo(direction);
-        }
-
-        protected void SetContext(TContext context)
-        {
-            this.context = context;
-
-            for (int i = 0, count = cards.Count; i < count; ++i)
-            {
-                cards[i].SetContext(context);
-            }
+            swiper.AutoSwipe(direction);
         }
 
         private UISwipeableCard<TData, TContext> CreateCard()
         {
-            var cardObject = Object.Instantiate(cardPrefab, cardRoot);
+            var cardObject = Instantiate(cardPrefab, cardRoot);
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
-            card.SetContext(context);
+            card.SetContext(Context);
             card.SetVisible(false);
             card.ActionSwipedRight += UpdateCardPosition;
             card.ActionSwipedLeft += UpdateCardPosition;
-            card.ActionSwipingRight += MoveFrontNextCard;
-            card.ActionSwipingLeft += MoveFrontNextCard;
+            card.ActionSwipingRight += MoveToFrontNextCard;
+            card.ActionSwipingLeft += MoveToFrontNextCard;
 
             return card;
         }
@@ -75,8 +75,8 @@ namespace SwipeableView
             card.UpdateRotation(Vector3.zero);
             card.UpdateScale(transform.childCount == 1 ? 1f : 0.92f);
 
-            var swipeTarget = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
-            swiper.SetCard(swipeTarget);
+            var target = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
+            swiper.SetTarget(target, target.GetComponent<ISwipeable>());
             // When there are three or more data,
             // Replace card index with the seconde index from here.
             int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
@@ -97,25 +97,25 @@ namespace SwipeableView
             card.UpdateContent(data[dataIndex]);
         }
 
-        private void MoveFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
+        private void MoveToFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
         {
             var nextCard = cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
-            if (nextCard == null)
-            {
-                return;
-            }
+            if (nextCard == null) return;
 
             nextCard.UpdateScale(Mathf.Lerp(0.92f, 1f, rate));
         }
     }
 
-    public enum Direction
+    /// <summary>
+    /// Direction on the swipe.
+    /// </summary>
+    public enum SwipeDirection
     {
         Right,
         Left,
     }
 
-    public class SwipeableViewNullContext { }
+    public sealed class SwipeableViewNullContext { }
     public class UISwipeableView<TData> : UISwipeableView<TData, SwipeableViewNullContext>
     { }
 }

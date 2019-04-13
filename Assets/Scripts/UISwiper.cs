@@ -8,24 +8,35 @@ namespace SwipeableView
         private RectTransform cachedRect;
 
         private ISwipeable swipeable;
-        public void SetCard(GameObject card)
+
+        /// <summary>
+        /// Set the target.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="swipeable"></param>
+        public void SetTarget(GameObject target, ISwipeable swipeable)
         {
-            swipeable = card.GetComponent<ISwipeable>();
-            cachedRect = card.transform as RectTransform;
+            cachedRect = target.transform as RectTransform;
+            this.swipeable = swipeable;
         }
 
-        public void AutoSwipeTo(Direction direction)
+        /// <summary>
+        /// Auto Swipe to the specified derection.
+        /// </summary>
+        /// <param name="direction"></param>
+        public void AutoSwipe(SwipeDirection direction)
         {
-            if (direction == Direction.Right)
+            if (direction == SwipeDirection.Right)
             {
-                swipeable.AutoSwipeToRight(Vector3.zero);
+                swipeable.AutoSwipeRight(Vector3.zero);
             }
             else
             {
-                swipeable.AutoSwipeToLeft(Vector3.zero);
+                swipeable.AutoSwipeLeft(Vector3.zero);
             }
         }
 
+#region DragHandler
         private Vector2 pointerStartLocalPosition;
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
@@ -89,5 +100,6 @@ namespace SwipeableView
 
             swipeable.EndSwipe();
         }
+#endregion
     }
 }

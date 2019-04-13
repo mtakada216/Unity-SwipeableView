@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace SwipeableView
 {
@@ -8,7 +6,7 @@ namespace SwipeableView
     {
         public void UpdateData(List<LoadTextureCardData> data)
         {
-            base.Initialize(data);
+            Initialize(data);
         }
     }
 }

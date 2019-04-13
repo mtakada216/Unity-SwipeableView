@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace SwipeableView
@@ -10,7 +8,7 @@ namespace SwipeableView
         [SerializeField]
         private UISwipeableViewLoadTexture swipeableView = default;
 
-        private static readonly string[] imageUrls =
+        private static readonly string[] _imageUrls =
         {
             "https://images.pexels.com/photos/1245063/pexels-photo-1245063.jpeg?cs=srgb&dl=agriculture-countryside-crop-1245063.jpg&fm=jpg",
             "https://images.pexels.com/photos/1232594/pexels-photo-1232594.jpeg?cs=srgb&dl=alps-clouds-dawn-1232594.jpg&fm=jpg",
@@ -21,7 +19,7 @@ namespace SwipeableView
 
         void Start()
         {
-            var data = imageUrls
+            var data = _imageUrls
                 .Select(imageUrl => new LoadTextureCardData
                 {
                     url = imageUrl
@@ -33,12 +31,12 @@ namespace SwipeableView
 
         public void OnClickLike()
         {
-            swipeableView.AutoSwipeTo(Direction.Right);
+            swipeableView.AutoSwipe(SwipeDirection.Right);
         }
 
         public void OnClickNope()
         {
-            swipeableView.AutoSwipeTo(Direction.Left);
+            swipeableView.AutoSwipe(SwipeDirection.Left);
         }
     }
 }
