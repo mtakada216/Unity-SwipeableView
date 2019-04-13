@@ -8,12 +8,9 @@ namespace SwipeableView
     public class LoadTextureScene : MonoBehaviour
     {
         [SerializeField]
-        private UISwipeableViewLoadTexture swipeableView;
+        private UISwipeableViewLoadTexture swipeableView = default;
 
-        [SerializeField]
-        private TextureDownloader textureDownloader;
-
-        private static readonly string[] imageUrls = new string[]
+        private static readonly string[] imageUrls =
         {
             "https://images.pexels.com/photos/1245063/pexels-photo-1245063.jpeg?cs=srgb&dl=agriculture-countryside-crop-1245063.jpg&fm=jpg",
             "https://images.pexels.com/photos/1232594/pexels-photo-1232594.jpeg?cs=srgb&dl=alps-clouds-dawn-1232594.jpg&fm=jpg",

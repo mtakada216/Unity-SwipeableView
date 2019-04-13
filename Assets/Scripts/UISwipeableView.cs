@@ -7,13 +7,13 @@ namespace SwipeableView
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
     {
         [SerializeField]
-        private GameObject cardPrefab;
+        private GameObject cardPrefab = default;
 
         [SerializeField]
-        private Transform cardRoot;
+        private Transform cardRoot = default;
 
         [SerializeField]
-        private UISwiper swiper;
+        private UISwiper swiper = default;
 
         private List<TData> data = new List<TData>();
         private TContext context;

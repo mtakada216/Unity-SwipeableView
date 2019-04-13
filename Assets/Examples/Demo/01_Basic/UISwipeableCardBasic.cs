@@ -6,13 +6,13 @@ namespace SwipeableView
     public class UISwipeableCardBasic : UISwipeableCard<BasicCardData>
     {
         [SerializeField]
-        private Image bg;
+        private Image bg = default;
 
         [SerializeField]
-        private CanvasGroup imgLike;
+        private CanvasGroup imgLike = default;
 
         [SerializeField]
-        private CanvasGroup imgNope;
+        private CanvasGroup imgNope = default;
 
         public override void UpdateContent(BasicCardData data)
         {

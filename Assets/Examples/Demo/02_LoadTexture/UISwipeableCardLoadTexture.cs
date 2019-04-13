@@ -6,13 +6,13 @@ namespace SwipeableView
     public class UISwipeableCardLoadTexture : UISwipeableCard<LoadTextureCardData>
     {
         [SerializeField]
-        private RawImage image;
+        private RawImage image = default;
 
         [SerializeField]
-        private CanvasGroup imgLike;
+        private CanvasGroup imgLike = default;
 
         [SerializeField]
-        private CanvasGroup imgNope;
+        private CanvasGroup imgNope = default;
 
         public override void UpdateContent(LoadTextureCardData data)
         {

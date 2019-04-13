@@ -8,7 +8,7 @@ namespace SwipeableView
     public class BasicScene : MonoBehaviour
     {
         [SerializeField]
-        private UISwipeableViewBasic swipeableView;
+        private UISwipeableViewBasic swipeableView = default;
 
         void Start()
         {
