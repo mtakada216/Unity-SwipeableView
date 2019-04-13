@@ -24,11 +24,13 @@ namespace SwipeableView
 
         public void OnClickLike()
         {
+            if (swipeableView.IsAutoSwiping) return;
             swipeableView.AutoSwipe(SwipeDirection.Right);
         }
 
         public void OnClickNope()
         {
+            if (swipeableView.IsAutoSwiping) return;
             swipeableView.AutoSwipe(SwipeDirection.Left);
         }
     }

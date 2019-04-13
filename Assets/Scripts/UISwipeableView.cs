@@ -16,6 +16,11 @@ namespace SwipeableView
         private UISwiper swiper = default;
 
         /// <summary>
+        /// Is the card swiping.
+        /// </summary>
+        public bool IsAutoSwiping { get; private set; }
+
+        /// <summary>
         /// Is the card exists.
         /// </summary>
         protected bool ExistsCard { get; private set; }
@@ -56,6 +61,7 @@ namespace SwipeableView
         public void AutoSwipe(SwipeDirection direction)
         {
             if (!ExistsCard) return;
+            IsAutoSwiping = true;
             swiper.AutoSwipe(direction);
         }
 
@@ -91,6 +97,7 @@ namespace SwipeableView
 
         private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
+            IsAutoSwiping = false;
             ExistsCard = dataIndex != data.Count + 1;
             // if data doesn't exist hide card
             if (dataIndex < 0 || dataIndex > data.Count - 1)
