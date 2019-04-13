@@ -15,6 +15,11 @@ namespace SwipeableView
         [SerializeField]
         private UISwiper swiper = default;
 
+        /// <summary>
+        /// Is the card exists.
+        /// </summary>
+        protected bool ExistsCard { get; private set; }
+
         protected TContext Context { get; }
 
         private List<TData> data = new List<TData>();
@@ -50,6 +55,7 @@ namespace SwipeableView
         /// <param name="direction"></param>
         public void AutoSwipe(SwipeDirection direction)
         {
+            if (!ExistsCard) return;
             swiper.AutoSwipe(direction);
         }
 
@@ -85,6 +91,7 @@ namespace SwipeableView
 
         private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
+            ExistsCard = dataIndex != data.Count + 1;
             // if data doesn't exist hide card
             if (dataIndex < 0 || dataIndex > data.Count - 1)
             {
