@@ -19,7 +19,7 @@ public class DemoCardData
 
 ### 2. Create SwipeableView by extends UISwipeableView.
 ```c#
-public class UISwipeableViewDemo : UISwipeableView<DemoCardData>
+public class SwipeableViewDemo : UISwipeableView<DemoCardData>
 {
     public void UpdateData(List<DemoCardData> data)
     {
@@ -30,7 +30,7 @@ public class UISwipeableViewDemo : UISwipeableView<DemoCardData>
 
 ### 3. Create SwipeableCard by extends UISwipeableCard.
 ```c#
-public class UISwipeableCardDemo : UISwipeableCard<DemoCardData>
+public class SwipeableCardDemo : UISwipeableCard<DemoCardData>
 {
     [SerializeField] private Image bg;
 
@@ -62,7 +62,10 @@ public class DemoScene : MonoBehaviour
 ```
 
 ## Environment
-Unity 2018.2.16f1
+Unity 2018.3.11f1
 
 ## License
 MIT
+
+## Author
+[kiepng](https://github.com/kiepng)
