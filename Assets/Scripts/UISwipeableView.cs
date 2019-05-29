@@ -7,13 +7,13 @@ namespace SwipeableView
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
     {
         [SerializeField]
-        private GameObject cardPrefab = default;
+        GameObject cardPrefab = default;
 
         [SerializeField]
-        private Transform cardRoot = default;
+        Transform cardRoot = default;
 
         [SerializeField]
-        private UISwiper swiper = default;
+        UISwiper swiper = default;
 
         /// <summary>
         /// Is the card swiping.
@@ -27,11 +27,11 @@ namespace SwipeableView
 
         protected TContext Context { get; }
 
-        private List<TData> data = new List<TData>();
+        List<TData> data = new List<TData>();
 
-        private readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(_maxCreateCardCount);
+        readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(_maxCreateCardCount);
 
-        private const int _maxCreateCardCount = 2;
+        const int _maxCreateCardCount = 2;
 
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace SwipeableView
             swiper.AutoSwipe(direction);
         }
 
-        private UISwipeableCard<TData, TContext> CreateCard()
+        UISwipeableCard<TData, TContext> CreateCard()
         {
             var cardObject = Instantiate(cardPrefab, cardRoot);
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
@@ -79,7 +79,7 @@ namespace SwipeableView
             return card;
         }
 
-        private void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
+        void UpdateCardPosition(UISwipeableCard<TData, TContext> card)
         {
             // move to the back
             card.transform.SetAsFirstSibling();
@@ -95,7 +95,7 @@ namespace SwipeableView
             UpdateCard(card, index);
         }
 
-        private void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
+        void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
             IsAutoSwiping = false;
             ExistsCard = dataIndex != data.Count + 1;
@@ -111,7 +111,7 @@ namespace SwipeableView
             card.UpdateContent(data[dataIndex]);
         }
 
-        private void MoveToFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
+        void MoveToFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
         {
             var nextCard = cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
             if (nextCard == null) return;

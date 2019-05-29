@@ -21,10 +21,11 @@ namespace SwipeableView
 
         protected TContext Context { get; private set; }
 
-        private RectTransform cachedRect;
+        RectTransform cachedRect;
 
-        private const float _epsion = 1.192093E-07f;
-        private const float _maxInclinedAngle = 10f;
+        const float _epsion = 1.192093E-07f;
+        const float _maxInclinedAngle = 10f;
+        const float _moveDuration = 0.25f;
 
         void OnEnable()
         {
@@ -145,7 +146,6 @@ namespace SwipeableView
             else
             {
                 StartCoroutine(MoveCoroutine(cachedRect.localPosition, Vector3.zero));
-                StartCoroutine(RotateCoroutine(cachedRect.localEulerAngles, Vector3.zero));
             }
         }
 
@@ -168,63 +168,29 @@ namespace SwipeableView
         }
 #endregion
 
-        private bool IsSwipedRight(Vector3 position)
+        bool IsSwipedRight(Vector3 position)
         {
             return position.x > 0 && position.x > GetRequiredDistance(position.x);
         }
 
-        private bool IsSwipedLeft(Vector3 position)
+        bool IsSwipedLeft(Vector3 position)
         {
             return position.x < 0 && position.x < GetRequiredDistance(position.x);
         }
 
-        private float GetRequiredDistance(float positionX)
+        float GetRequiredDistance(float positionX)
         {
             return positionX > 0 ? cachedRect.rect.size.x / 2 : -(cachedRect.rect.size.x / 2);
         }
 
-        private float GetCurrentPosition(float positionX)
+        float GetCurrentPosition(float positionX)
         {
             return positionX / GetRequiredDistance(positionX);
         }
 
-        private const float DURATION = 0.25f;
-        private IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
+        IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
         {
-            yield return PlayAnimationCoroutine(
-                diff =>
-                {
-                    float rate = 1 - Mathf.Clamp01(diff / DURATION);
-                    cachedRect.localPosition = Vector3.Lerp(from, to, rate);
-                },
-                () =>
-                {
-                    cachedRect.localPosition = to;
-                    onComplete?.Invoke();
-                }
-            );
-        }
-
-        private IEnumerator RotateCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
-        {
-            yield return PlayAnimationCoroutine(
-                diff =>
-                {
-                    float rate = 1 - Mathf.Clamp01(diff / DURATION);
-                    float angleZ = Mathf.Lerp(from.z > 180 ? from.z - 360 : from.z, to.z, rate);
-                    cachedRect.localEulerAngles = new Vector3(from.x, from.y, angleZ);
-                },
-                () =>
-                {
-                    cachedRect.localEulerAngles = to;
-                    onComplete?.Invoke();
-                }
-            );
-        }
-
-        private IEnumerator PlayAnimationCoroutine(Action<float> onUpdate, Action onComplete)
-        {
-            float endTime = Time.time + DURATION;
+            float endTime = Time.time + _moveDuration;
 
             while (true)
             {
@@ -234,11 +200,13 @@ namespace SwipeableView
                     break;
                 }
 
-                onUpdate.Invoke(diff);
+                float rate = 1 - Mathf.Clamp01(diff / _moveDuration);
+                cachedRect.localPosition = Vector3.Lerp(from, to, rate);
                 yield return null;
             }
 
-            onComplete.Invoke();
+            cachedRect.localPosition = to;
+            onComplete?.Invoke();
         }
     }
 

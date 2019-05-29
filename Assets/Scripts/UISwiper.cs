@@ -5,9 +5,9 @@ namespace SwipeableView
 {
     public class UISwiper : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        private RectTransform cachedRect;
+        RectTransform cachedRect;
 
-        private ISwipeable swipeable;
+        ISwipeable swipeable;
 
         /// <summary>
         /// Set the target.
@@ -37,7 +37,7 @@ namespace SwipeableView
         }
 
 #region DragHandler
-        private Vector2 pointerStartLocalPosition;
+        Vector2 pointerStartLocalPosition;
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left)
