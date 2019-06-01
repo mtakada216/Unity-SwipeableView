@@ -6,6 +6,8 @@ namespace SwipeableView
 {
     public class UISwipeableCard<TData, TContext> : MonoBehaviour, ISwipeable where TContext : class
     {
+        [SerializeField] SwipeableViewData _viewData = default;
+
         /// <summary>
         /// Index of Card Data.
         /// </summary>
@@ -21,20 +23,18 @@ namespace SwipeableView
 
         protected TContext Context { get; private set; }
 
-        RectTransform cachedRect;
+        RectTransform _cachedRect;
 
         const float _epsion = 1.192093E-07f;
-        const float _maxInclinedAngle = 10f;
-        const float _moveDuration = 0.25f;
 
         void OnEnable()
         {
-            cachedRect = transform as RectTransform;
+            _cachedRect = transform as RectTransform;
         }
 
         void Update()
         {
-            var rectPosX = cachedRect.localPosition.x;
+            var rectPosX = _cachedRect.localPosition.x;
             if (Math.Abs(rectPosX) < _epsion)
             {
                 SwipingRight(0);
@@ -43,7 +43,7 @@ namespace SwipeableView
             }
 
             var t = GetCurrentPosition(rectPosX);
-            var maxAngle = rectPosX < 0 ? _maxInclinedAngle : -_maxInclinedAngle;
+            var maxAngle = rectPosX < 0 ? _viewData.MaxInclinationAngle : -_viewData.MaxInclinationAngle;
             UpdateRotation(Vector3.Lerp(Vector3.zero, new Vector3(0f, 0f, maxAngle), t));
 
             if (rectPosX > 0)
@@ -90,7 +90,7 @@ namespace SwipeableView
         /// <param name="position"></param>
         public virtual void UpdatePosition(Vector3 position)
         {
-            cachedRect.localPosition = position;
+            _cachedRect.localPosition = position;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace SwipeableView
         /// <param name="rotation"></param>
         public virtual void UpdateRotation(Vector3 rotation)
         {
-            cachedRect.localEulerAngles = rotation;
+            _cachedRect.localEulerAngles = rotation;
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace SwipeableView
         /// <param name="scale"></param>
         public virtual void UpdateScale(float scale)
         {
-            cachedRect.localScale = scale * Vector3.one;
+            _cachedRect.localScale = scale * Vector3.one;
         }
 
         /// <summary>
@@ -128,30 +128,30 @@ namespace SwipeableView
 #region ISwipeable
         public void Swipe(Vector2 position)
         {
-            UpdatePosition(cachedRect.localPosition + new Vector3(position.x, position.y, 0));
+            UpdatePosition(_cachedRect.localPosition + new Vector3(position.x, position.y, 0));
         }
 
         public void EndSwipe()
         {
             // over required distance -> Auto swipe
-            if (IsSwipedRight(cachedRect.localPosition))
+            if (IsSwipedRight(_cachedRect.localPosition))
             {
-                AutoSwipeRight(cachedRect.localPosition);
+                AutoSwipeRight(_cachedRect.localPosition);
             }
-            else if (IsSwipedLeft(cachedRect.localPosition))
+            else if (IsSwipedLeft(_cachedRect.localPosition))
             {
-                AutoSwipeLeft(cachedRect.localPosition);
+                AutoSwipeLeft(_cachedRect.localPosition);
             }
             // Not been reached required distance -> Return to default position
             else
             {
-                StartCoroutine(MoveCoroutine(cachedRect.localPosition, Vector3.zero));
+                StartCoroutine(MoveCoroutine(_cachedRect.localPosition, Vector3.zero));
             }
         }
 
         public void AutoSwipeRight(Vector3 from)
         {
-            var to = new Vector3(cachedRect.rect.size.x * 1.5f, from.y, from.z);
+            var to = new Vector3(_cachedRect.rect.size.x * 1.5f, from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
                 ActionSwipedRight?.Invoke(this);
@@ -160,7 +160,7 @@ namespace SwipeableView
 
         public void AutoSwipeLeft(Vector3 from)
         {
-            var to = new Vector3(-(cachedRect.rect.size.x * 1.5f), from.y, from.z);
+            var to = new Vector3(-(_cachedRect.rect.size.x * 1.5f), from.y, from.z);
             StartCoroutine(MoveCoroutine(from, to, () =>
             {
                 ActionSwipedLeft?.Invoke(this);
@@ -180,7 +180,7 @@ namespace SwipeableView
 
         float GetRequiredDistance(float positionX)
         {
-            return positionX > 0 ? cachedRect.rect.size.x / 2 : -(cachedRect.rect.size.x / 2);
+            return positionX > 0 ? _cachedRect.rect.size.x / 2 : -(_cachedRect.rect.size.x / 2);
         }
 
         float GetCurrentPosition(float positionX)
@@ -190,7 +190,7 @@ namespace SwipeableView
 
         IEnumerator MoveCoroutine(Vector3 from, Vector3 to, Action onComplete = null)
         {
-            float endTime = Time.time + _moveDuration;
+            float endTime = Time.time + _viewData.SwipeDuration;
 
             while (true)
             {
@@ -200,12 +200,12 @@ namespace SwipeableView
                     break;
                 }
 
-                float rate = 1 - Mathf.Clamp01(diff / _moveDuration);
-                cachedRect.localPosition = Vector3.Lerp(from, to, rate);
+                float rate = 1 - Mathf.Clamp01(diff / _viewData.SwipeDuration);
+                _cachedRect.localPosition = Vector3.Lerp(from, to, rate);
                 yield return null;
             }
 
-            cachedRect.localPosition = to;
+            _cachedRect.localPosition = to;
             onComplete?.Invoke();
         }
     }

@@ -6,14 +6,10 @@ namespace SwipeableView
 {
     public class UISwipeableView<TData, TContext> : MonoBehaviour where TContext : class
     {
-        [SerializeField]
-        GameObject cardPrefab = default;
-
-        [SerializeField]
-        Transform cardRoot = default;
-
-        [SerializeField]
-        UISwiper swiper = default;
+        [SerializeField] GameObject _cardPrefab = default;
+        [SerializeField] Transform _cardRoot = default;
+        [SerializeField] UISwiper _swiper = default;
+        [SerializeField] SwipeableViewData _viewData = default;
 
         /// <summary>
         /// Is the card swiping.
@@ -27,10 +23,9 @@ namespace SwipeableView
 
         protected TContext Context { get; }
 
-        List<TData> data = new List<TData>();
+        List<TData> _data = new List<TData>();
 
-        readonly List<UISwipeableCard<TData, TContext>> cards = new List<UISwipeableCard<TData, TContext>>(_maxCreateCardCount);
-
+        readonly List<UISwipeableCard<TData, TContext>> _cards = new List<UISwipeableCard<TData, TContext>>(_maxCreateCardCount);
         const int _maxCreateCardCount = 2;
 
 
@@ -40,7 +35,7 @@ namespace SwipeableView
         /// <param name="data"></param>
         protected void Initialize(List<TData> data)
         {
-            this.data = data;
+            _data = data;
 
             int createCount = data.Count > _maxCreateCardCount ?
                 _maxCreateCardCount : data.Count;
@@ -50,7 +45,7 @@ namespace SwipeableView
                 var card = CreateCard();
                 card.DataIndex = i;
                 UpdateCardPosition(card);
-                cards.Add(card);
+                _cards.Add(card);
             }
         }
 
@@ -62,12 +57,12 @@ namespace SwipeableView
         {
             if (!ExistsCard) return;
             IsAutoSwiping = true;
-            swiper.AutoSwipe(direction);
+            _swiper.AutoSwipe(direction);
         }
 
         UISwipeableCard<TData, TContext> CreateCard()
         {
-            var cardObject = Instantiate(cardPrefab, cardRoot);
+            var cardObject = Instantiate(_cardPrefab, _cardRoot);
             var card = cardObject.GetComponent<UISwipeableCard<TData, TContext>>();
             card.SetContext(Context);
             card.SetVisible(false);
@@ -85,22 +80,25 @@ namespace SwipeableView
             card.transform.SetAsFirstSibling();
             card.UpdatePosition(Vector3.zero);
             card.UpdateRotation(Vector3.zero);
-            card.UpdateScale(transform.childCount == 1 ? 1f : 0.92f);
 
-            var target = transform.childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
-            swiper.SetTarget(target, target.GetComponent<ISwipeable>());
+            var childCount = transform.childCount;
+            card.UpdateScale(childCount == 1 ? 1f : _viewData.BottomCardScale);
+
+            var target = childCount == 1 ? card.gameObject : transform.GetChild(1).gameObject;
+            _swiper.SetTarget(target, target.GetComponent<ISwipeable>());
+
             // When there are three or more data,
             // Replace card index with the seconde index from here.
-            int index = cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
+            int index = _cards.Count < 2 ? card.DataIndex : card.DataIndex + 2;
             UpdateCard(card, index);
         }
 
         void UpdateCard(UISwipeableCard<TData, TContext> card, int dataIndex)
         {
             IsAutoSwiping = false;
-            ExistsCard = dataIndex != data.Count + 1;
+            ExistsCard = dataIndex != _data.Count + 1;
             // if data doesn't exist hide card
-            if (dataIndex < 0 || dataIndex > data.Count - 1)
+            if (dataIndex < 0 || dataIndex > _data.Count - 1)
             {
                 card.SetVisible(false);
                 return;
@@ -108,15 +106,15 @@ namespace SwipeableView
 
             card.SetVisible(true);
             card.DataIndex = dataIndex;
-            card.UpdateContent(data[dataIndex]);
+            card.UpdateContent(_data[dataIndex]);
         }
 
         void MoveToFrontNextCard(UISwipeableCard<TData, TContext> card, float rate)
         {
-            var nextCard = cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
+            var nextCard = _cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
             if (nextCard == null) return;
 
-            nextCard.UpdateScale(Mathf.Lerp(0.92f, 1f, rate));
+            nextCard.UpdateScale(Mathf.Lerp(_viewData.BottomCardScale, 1f, rate));
         }
     }
 
