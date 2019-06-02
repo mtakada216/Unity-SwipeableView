@@ -24,12 +24,14 @@ namespace SwipeableView
         protected TContext Context { get; private set; }
 
         RectTransform _cachedRect;
+        int _screenSize;
 
         const float _epsion = 1.192093E-07f;
 
         void OnEnable()
         {
             _cachedRect = transform as RectTransform;
+            _screenSize = Screen.height > Screen.width ? Screen.width : Screen.height;
         }
 
         void Update()
@@ -151,20 +153,16 @@ namespace SwipeableView
 
         public void AutoSwipeRight(Vector3 from)
         {
-            var to = new Vector3(_cachedRect.rect.size.x * 1.5f, from.y, from.z);
-            StartCoroutine(MoveCoroutine(from, to, () =>
-            {
-                ActionSwipedRight?.Invoke(this);
-            }));
+            var vec = from != Vector3.zero ? (from - Vector3.zero).normalized : Vector3.right;
+            var to = vec * _screenSize;
+            StartCoroutine(MoveCoroutine(from, to, () => ActionSwipedRight?.Invoke(this)));
         }
 
         public void AutoSwipeLeft(Vector3 from)
         {
-            var to = new Vector3(-(_cachedRect.rect.size.x * 1.5f), from.y, from.z);
-            StartCoroutine(MoveCoroutine(from, to, () =>
-            {
-                ActionSwipedLeft?.Invoke(this);
-            }));
+            var vec = from != Vector3.zero ? (from - Vector3.zero).normalized : Vector3.left;
+            var to = vec * _screenSize;
+            StartCoroutine(MoveCoroutine(from, to, () => ActionSwipedLeft?.Invoke(this)));
         }
 #endregion
 
@@ -200,8 +198,9 @@ namespace SwipeableView
                     break;
                 }
 
-                float rate = 1 - Mathf.Clamp01(diff / _viewData.SwipeDuration);
-                _cachedRect.localPosition = Vector3.Lerp(from, to, rate);
+                var rate = 1 - Mathf.Clamp01(diff / _viewData.SwipeDuration);
+                var t = _viewData.CardAnimationCurve.Evaluate(rate);
+                _cachedRect.localPosition = Vector3.Lerp(from, to, t);
                 yield return null;
             }
 

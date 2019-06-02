@@ -114,7 +114,8 @@ namespace SwipeableView
             var nextCard = _cards.FirstOrDefault(c => c.DataIndex != card.DataIndex);
             if (nextCard == null) return;
 
-            nextCard.UpdateScale(Mathf.Lerp(_viewData.BottomCardScale, 1f, rate));
+            var t = _viewData.CardAnimationCurve.Evaluate(rate);
+            nextCard.UpdateScale(Mathf.Lerp(_viewData.BottomCardScale, 1f, t));
         }
     }
 
